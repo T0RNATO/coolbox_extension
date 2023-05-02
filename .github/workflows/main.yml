@@ -18,4 +18,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: master
           directory: .
+          force: true
           message: Add extension.zip to repository
