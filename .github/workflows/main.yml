@@ -1,8 +1,17 @@
-name: Zip Extension
-on:
-  push:
-    branches:
-    - main
+name: Zip Files
+
+on: [push]
+
 jobs:
   zip:
-    uses: darshitsri/zip-release@v3
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Zip files
+        run: zip -r extension.zip .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: extension
+          path: extension.zip
