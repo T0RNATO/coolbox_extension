@@ -1,5 +1,4 @@
-name: Zip Files
-
+name: Zip Repository
 on:
   push:
     branches:
@@ -11,12 +10,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Zip files
+
+      - name: Zip repository
         run: |
-          cd ${{ github.workspace }}
           zip -r extension.zip .
+          
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: extension
+          name: extension.zip
           path: extension.zip
