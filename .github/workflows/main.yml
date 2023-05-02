@@ -16,8 +16,6 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          branch: master
           directory: .
-          force: true
-          clean: false
           message: Add extension.zip to repository
