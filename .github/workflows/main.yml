@@ -10,7 +10,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Create zip archive
         run: |
-          find . -type f -not -path "./.git/*" -not -path "./.github/*" -exec zip extension.zip {} +
+          cd extension
+          zip -r ../extension.zip .
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v7
         with:
