@@ -1,5 +1,8 @@
 name: Zip
-on: [push]
+on:
+  push:
+    paths:
+      - extension/**
 jobs:
   To-Zip:
     runs-on: ubuntu-latest
