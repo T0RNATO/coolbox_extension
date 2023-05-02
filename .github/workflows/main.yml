@@ -1,18 +1,18 @@
-name: Create Zip Archive
-
-on: push
-
+name: Zip
+on: [push]
 jobs:
-  zip:
+  To-Zip:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create Zip Archive
-        run: |
-          zip extension.zip extension/*
-      - name: Commit and push changes
+      - name: Checkout 
+        uses: actions/checkout@v3
+      
+      - name: Create zip
+        run: zip -r -q extension.zip extension
+        
+      - name: Commit and push
         uses: EndBug/add-and-commit@v7
         with:
-          message: "Create zip archive"
-          add: "extension.zip"
+          add: '["extension.zip"]'
+          message: 'Create archive'
+          push: true
