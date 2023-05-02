@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Schoolbox Fix",
+  "version": "0.1",
+  "description": "An extension to make Donvale Schoolbox look good again.",
+  "icons": {
+    "64": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "css": [
+        "schoolbox.css"
+      ],
+      "js": [
+        "schoolbox.js"
+      ],
+      "matches": [
+        "https://schoolbox.donvale.vic.edu.au/"
+      ]
+    }
+  ],
+  "host_permissions": [
+    "https://schoolbox.donvale.vic.edu.au/"
+  ]
+}
