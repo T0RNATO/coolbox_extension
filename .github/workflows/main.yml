@@ -8,15 +8,10 @@ jobs:
   zip:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Zip repository
-        run: |
-          zip -r extension.zip .
-          
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: extension.zip
-          path: extension.zip
+    - name: Zip-Release4cpp
+      uses: darshitsri/zip-release@v3
+      with:
+        # Filename for archive
+        filename: extension.zip
+        # List of excluded files / directories
+        exclusions: .github, .git, extension.zip
