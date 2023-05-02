@@ -1,10 +1,9 @@
 name: Create Zip Archive
-on:
-  push:
-    branches:
-      - master
+
+on: push
+
 jobs:
-  build:
+  zip:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -12,11 +11,8 @@ jobs:
       - name: Create Zip Archive
         run: |
           zip -r extension.zip extension/
-      - name: Add Zip Archive to repository
-        uses: ad-m/github-push-action@master
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v7
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: master
-          directory: .
-          force: true
-          message: Add extension.zip to repository
+          message: "Create zip archive"
+          add: "extension.zip"
