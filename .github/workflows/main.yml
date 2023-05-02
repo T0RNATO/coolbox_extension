@@ -12,7 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Zip files
-        run: zip -r extension.zip .
+        run: |
+          cd ${{ github.workspace }}
+          zip -r extension.zip .
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
