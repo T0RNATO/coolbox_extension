@@ -2,7 +2,7 @@ name: Create Zip Archive
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
