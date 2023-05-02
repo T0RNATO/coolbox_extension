@@ -1,0 +1,8 @@
+name: Zip Extension
+on:
+  push:
+    branches:
+    - main
+jobs:
+  zip:
+    uses: darshitsri/zip-release@v3
