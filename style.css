@@ -16,6 +16,9 @@ div {
 h1 {
     font-family: 'Poppins', sans-serif;
 }
-ul {
+ul, ol {
     text-align: left;
+}
+.code {
+    background: #ddd;
 }
