@@ -1,0 +1,21 @@
+body {
+    background: linear-gradient(45deg, #ca88ce, #50a9c2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+div {
+    background: white;
+    width: 40%;
+    height: 80%;
+    border-radius: 7px;
+    padding: 20px;
+    font-family: 'Roboto Mono', monospace;
+    text-align: center;
+}
+h1 {
+    font-family: 'Poppins', sans-serif;
+}
+ul {
+    text-align: left;
+}
