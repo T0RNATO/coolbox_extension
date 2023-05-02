@@ -1,6 +1,9 @@
 name: Zip Files
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   zip:
