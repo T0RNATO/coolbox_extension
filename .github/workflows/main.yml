@@ -2,7 +2,7 @@ name: Create Zip Archive
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,8 +12,12 @@ jobs:
       - name: Create Zip Archive
         run: |
           zip -r extension.zip extension/
-      - name: Upload Zip Archive
-        uses: actions/upload-artifact@v2
+      - name: Add Zip Archive to repository
+        uses: ad-m/github-push-action@master
         with:
-          name: extension
-          path: extension.zip
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          directory: .
+          force: true
+          clean: false
+          message: Add extension.zip to repository
