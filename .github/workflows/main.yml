@@ -1,17 +1,18 @@
-name: Zip Repository
-on:
-  push:
-    branches:
-      - master
+name: Create Zip Archive
+
+on: push
 
 jobs:
   zip:
     runs-on: ubuntu-latest
     steps:
-    - name: Zip-Release4cpp
-      uses: darshitsri/zip-release@v3
-      with:
-        # Filename for archive
-        filename: extension.zip
-        # List of excluded files / directories
-        exclusions: .github, .git, extension.zip
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create zip archive
+        run: |
+          find . -type f -not -path "./.git/*" -not -path "./.github/*" -exec zip extension.zip {} +
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: "Create zip archive"
+          add: "extension.zip"
