@@ -10,8 +10,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Create zip archive
         run: |
-          cd extension
-          zip -r ../extension.zip .
+          zip -r extension.zip extension
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v7
         with:
