@@ -106,7 +106,7 @@ const c = new DOMParser();
 
 function updateTimetable() {
     fetch(location.href).then(data => {data.text().then(e => {
-        document.querySelector("[data-timetable-container]").replaceWith(c.parseFromString(e, "text/html").querySelector("[data-timetable-container]"));
+        document.querySelector("[data-timetable-container] section").replaceWith(c.parseFromString(e, "text/html").querySelector("[data-timetable-container] section"));
     })})
 }
 
