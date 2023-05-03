@@ -4,6 +4,7 @@ news.remove()
 
 // Move it to the right column
 document.querySelector(".column-right").appendChild(news)
+const calenderLoaded = false;
 
 // Create an observer for an element - the calender box
 const observer = new MutationObserver((mutationList) => {
@@ -15,11 +16,7 @@ const observer = new MutationObserver((mutationList) => {
             mutation.target.innerText.includes("Week")
             ) {
             
-            // Extract the week number
-            const week = document.querySelector(".fc-list-event .fc-list-event-title").textContent.split("(")[0].trim();
-            
-            // And put it in the day text
-            document.querySelector("[data-timetable-header]").innerText += " (" + week + ")"
+            calenderLoaded = true;
 
             // Remove the observer
             observer.disconnect();
@@ -107,6 +104,11 @@ const c = new DOMParser();
 function updateTimetable() {
     fetch(location.href).then(data => {data.text().then(e => {
         document.querySelector("[data-timetable-container]").replaceWith(c.parseFromString(e, "text/html").querySelector("[data-timetable-container]"));
+        // Extract the week number
+        const week = document.querySelector(".fc-list-event .fc-list-event-title").textContent.split("(")[0].trim();
+            
+        // And put it in the day text
+        document.querySelector("[data-timetable-header]").innerText += " (" + week + ")"
     })})
 }
 
