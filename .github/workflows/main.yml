@@ -11,8 +11,14 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Create zip
-        run: cd ./extension && zip -r ../extension.zip ./
+        run: cd ./extension && zip -r ../chrome-based.zip ./
         
+      - name: Update service worker
+        run: cd ./extension && sed 's/\"service_worker\": \"service_worker.js\"/\"scripts\": [ \"service_worker.js\" ]/g' manifest.json
+        
+      - name: Create zip
+        run: cd ./extension && zip -r ../firefox.zip ./  
+      
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
@@ -24,4 +30,4 @@ jobs:
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
-          artifacts: "extension.zip"
+          artifacts: "chrome-based.zip, firefox.zip"
