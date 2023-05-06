@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - extension/**
+      - .github/**
 jobs:
   To-Zip:
     runs-on: ubuntu-latest
@@ -11,8 +12,19 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Create zip
-        run: cd ./extension && zip -r ../extension.zip ./
+        run: cd ./extension && zip -r ../chrome-based.zip ./
         
+      - name: Fix Manifest
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: '"service_worker": "service_worker.js"'
+          replace: '"scripts": [ "service_worker.js" ]'
+          include: 'manifest.json'
+          regex: false
+        
+      - name: Create zip
+        run: cd ./extension && zip -r ../firefox.zip ./  
+      
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
@@ -24,4 +36,4 @@ jobs:
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
-          artifacts: "extension.zip"
+          artifacts: "chrome-based.zip, firefox.zip"
