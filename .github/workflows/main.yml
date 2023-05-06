@@ -19,8 +19,11 @@ jobs:
         with:
           find: '"service_worker": "service_worker.js"'
           replace: '"scripts": [ "service_worker.js" ]'
-          include: './extension/manifest.json'
+          include: ./extension/manifest.json
           regex: false
+          
+      - name: Cat file
+        run: cd ./extension && cat ./manifest.json
         
       - name: Create zip
         run: cd ./extension && zip -r ../firefox.zip ./  
