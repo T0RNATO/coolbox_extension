@@ -25,6 +25,11 @@ jobs:
       - name: Cat file
         run: cd ./extension && cat ./manifest.json
         
+      - uses: actions/upload-artifact@v3
+        with:
+          name: manifest.json
+          path: ./extension
+        
       - name: Create zip
         run: cd ./extension && zip -r ../firefox.zip ./  
       
