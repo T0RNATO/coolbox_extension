@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - extension/**
+      - .github/**
 jobs:
   To-Zip:
     runs-on: ubuntu-latest
