@@ -13,8 +13,13 @@ jobs:
       - name: Create zip
         run: cd ./extension && zip -r ../chrome-based.zip ./
         
-      - name: Update service worker
-        run: cd ./extension && sed 's/\"service_worker\": \"service_worker.js\"/\"scripts\": [ \"service_worker.js\" ]/g' manifest.json
+      - name: Fix Manifest
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: '"service_worker": "service_worker.js"'
+          replace: '"scripts": [ "service_worker.js" ]'
+          include: 'manifest.json'
+          regex: false
         
       - name: Create zip
         run: cd ./extension && zip -r ../firefox.zip ./  
