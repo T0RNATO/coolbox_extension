@@ -17,8 +17,8 @@ jobs:
       - name: Fix Manifest
         uses: jacobtomlinson/gha-find-replace@v3
         with:
-          find: "service_worker"
-          replace: "scripts"
+          find: '"service_worker": "service_worker.js"'
+          replace: '"scripts": [ "service_worker.js" ]'
           include: "**manifest.json"
           regex: false
           
