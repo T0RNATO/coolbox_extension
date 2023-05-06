@@ -1,3 +1,9 @@
+// Get the schoolbox login cookie to authenticate with coolbox
+let cookie;
+chrome.runtime.sendMessage(null, (cook) => {
+    cookie = cook;
+})
+
 // Get rid of the old news section
 const news = document.querySelector("#component10");
 news.remove()
@@ -114,3 +120,77 @@ function updateTimetable() {
 setInterval(updateTime, 10 * 1000)
 
 updateTime();
+
+for (const dueWorkItem of document.querySelectorAll("#component52396 .card")) {
+    const reminderButton = document.createElement("div");
+    reminderButton.classList.add("reminder-button");
+    reminderButton.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        const popup = document.querySelector(".popup");
+
+        popup.querySelector("#rem-name").value = ev.target.parentElement.querySelector("h3").innerText;
+
+        let time = ev.target.parentElement.querySelector("span").title;
+        time = time.replace("am", "AM").replace("pm", "PM");
+
+        popup.querySelector("#rem-time").value = time;
+
+        popup.classList.add("display");
+    })
+    dueWorkItem.appendChild(reminderButton);
+}
+
+document.head.innerHTML += /*html*/`
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+`
+
+const popup = document.createElement("div");
+popup.classList.add("popup");
+popup.innerHTML = /*html*/`
+    <div class="popup-title">
+        <h1><strong>Create Reminder</strong></h1>
+    </div>
+    <div class="popup-body">
+        Name:
+        <input placeholder="Reminder Name" id="rem-name">
+        Time:
+        <input placeholder="Time, idk" id="rem-time">
+        Notification Method:<br>
+        <input type="radio" id="system" value="system" class="plain popup-radio" name="notif-method">
+        <label for="system" class="popup-label button">System Notification</label>
+        <input type="radio" id="discord" value="discord" class="plain popup-radio" name="notif-method">
+        <label for="discord" class="popup-label button">Discord Ping</label>
+        <input type="radio" id="both" value="both" class="plain popup-radio" name="notif-method">
+        <label for="both" class="popup-label button">Both</label>
+        <div class="popup-buttons">
+            <button class="submit popup-button" id="create-reminder">Create Reminder</button>
+            <button class="popup-button" id="cancel-popup">Cancel</button>
+        </div>
+    </div>
+`
+
+window.addEventListener("load", () => {
+    let timePicker = flatpickr("#rem-time", {dateFormat: "l F J Y h:iK"});
+    console.log(timePicker);
+})
+
+document.body.appendChild(popup);
+popup.addEventListener("click", (e) => {e.stopPropagation()});
+
+function closePopup() {
+    document.querySelector(".popup").classList.remove("display");
+}
+
+document.querySelector("#cancel-popup").addEventListener("click", closePopup);
+document.body.addEventListener("click", closePopup);
+
+// EXPERIMENTAL QUICK NOTES
+// const reminders = document.createElement("div");
+// reminders.classList.add("notes_container")
+// reminders.innerHTML = `
+// <h1 class="rem_title">Quick Notes</h1>
+// <textarea class="notes"></textarea>
+// `
+// document.querySelector("#component52395 section").appendChild(reminders);
+
+// console.log(document.cookie)

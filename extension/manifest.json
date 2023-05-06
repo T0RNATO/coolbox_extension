@@ -12,7 +12,8 @@
         "schoolbox.css"
       ],
       "js": [
-        "schoolbox.js"
+        "schoolbox.js",
+        "flatpickr.js"
       ],
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/"
@@ -21,5 +22,19 @@
   ],
   "host_permissions": [
     "https://schoolbox.donvale.vic.edu.au/"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [ "reminder_add.png" ],
+      "matches": [
+        "https://schoolbox.donvale.vic.edu.au/*"
+      ]
+    }
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "permissions": [
+    "cookies"
   ]
 }
