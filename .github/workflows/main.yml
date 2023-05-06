@@ -19,7 +19,7 @@ jobs:
         with:
           find: "service_worker"
           replace: "scripts"
-          include: ./extension/manifest.json
+          include: "**manifest.json"
           regex: false
           
       - name: Cat file
