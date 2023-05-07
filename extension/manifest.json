@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CoolBox",
-  "version": "0.1",
+  "version": "1.1.1",
   "description": "An extension to make Donvale Schoolbox look good again.",
   "icons": {
     "64": "icon.png"
@@ -12,8 +12,9 @@
         "schoolbox.css"
       ],
       "js": [
-        "schoolbox.js",
-        "flatpickr.js"
+        "js/schoolbox.js",
+        "js/flatpickr.js",
+        "js/popup.js"
       ],
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/"

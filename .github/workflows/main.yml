@@ -10,6 +10,25 @@ jobs:
     steps:
       - name: Checkout 
         uses: actions/checkout@v3
+        
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Set Manifest Version Number
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: '1.1.1'
+          replace: ${{ steps.tag_version.outputs.new_tag }}
+          include: "**manifest.json"
+          regex: false
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: manifest.json
+          path: ./extension
       
       - name: Create zip
         run: cd ./extension && zip -r ../chrome-based.zip ./
@@ -21,9 +40,6 @@ jobs:
           replace: '"scripts": [ "service_worker.js" ]'
           include: "**manifest.json"
           regex: false
-          
-      - name: Cat file
-        run: cd ./extension && cat ./manifest.json
         
       - uses: actions/upload-artifact@v3
         with:
@@ -31,13 +47,7 @@ jobs:
           path: ./extension
         
       - name: Create zip
-        run: cd ./extension && zip -r ../firefox.zip ./  
-      
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: cd ./extension && zip -r ../firefox.zip ./
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
