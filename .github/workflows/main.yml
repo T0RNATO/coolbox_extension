@@ -21,7 +21,7 @@ jobs:
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           find: '1.1.1'
-          replace: ${{ steps.tag_version.outputs.new_tag }}
+          replace: ${{ steps.tag_version.outputs.new_tag }} | cut -c 1-
           include: "**manifest.json"
           regex: false
           
