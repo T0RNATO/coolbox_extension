@@ -19,8 +19,16 @@ jobs:
         with:
           find: '"service_worker": "service_worker.js"'
           replace: '"scripts": [ "service_worker.js" ]'
-          include: 'manifest.json'
+          include: "**manifest.json"
           regex: false
+          
+      - name: Cat file
+        run: cd ./extension && cat ./manifest.json
+        
+      - uses: actions/upload-artifact@v3
+        with:
+          name: manifest.json
+          path: ./extension
         
       - name: Create zip
         run: cd ./extension && zip -r ../firefox.zip ./  
