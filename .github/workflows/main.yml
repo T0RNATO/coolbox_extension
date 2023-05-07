@@ -34,7 +34,7 @@ jobs:
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           find: 'versionv'
-          replace: ''
+          replace: ""
           include: "**manifest.json"
           regex: false
           
