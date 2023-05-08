@@ -37,5 +37,10 @@
   },
   "permissions": [
     "cookies"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "addon@coolbox.lol"
+    }
+  }
 }
