@@ -22,3 +22,8 @@ ul, ol {
 .code {
     background: #ddd;
 }
+.github-stats {
+    gap: 5px;
+    display: flex;
+    justify-content: center;
+}

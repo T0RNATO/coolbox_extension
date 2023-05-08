@@ -60,11 +60,11 @@ jobs:
           path: ./extension
         
       - name: Create zip
-        run: cd ./extension && zip -r ../firefox.zip ./
+        run: cd ./extension && zip -1 -r ../firefox.xpi ./
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
-          artifacts: "chrome-based.zip, firefox.zip"
+          artifacts: "chrome-based.zip, firefox.xpi"
