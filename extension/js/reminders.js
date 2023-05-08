@@ -207,10 +207,29 @@ document.querySelector("#save-reminder").addEventListener("click", () => {
             alert("Reminder Successfully Edited")
 
             response.json().then((reminder) => {
+                const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
                 buttonElement.dataset.reminder = JSON.stringify(reminder);
+                closePopup();
             })
         } else {
-            alert("Reminder Editing Failed")
+            alert("Reminder Editing Failed");
+            closePopup();
+        }
+    })
+});
+
+document.querySelector("#delete-reminder").addEventListener("click", () => {
+    const data = {id: openReminder.id};
+
+    request("DELETE", data).then((response) => {
+        if (response.ok && response.status === 200) {
+            alert("Reminder Successfully Deleted")
+
+            const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+            delete buttonElement.dataset.reminder;
+            buttonElement.innerText = "notification_add";
+        } else {
+            alert("Reminder Deletion Failed")
         }
         closePopup();
     })
