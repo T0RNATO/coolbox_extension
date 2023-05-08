@@ -72,7 +72,10 @@ document.querySelector("#cancel-popup").addEventListener("click", closePopup);
 document.querySelector("#create-reminder").addEventListener("click", () => {
     const title = document.querySelector("#rem-name").value;
     const time = timePicker.selectedDates[0].getTime();
-    const method = document.querySelector(".popup-radio:checked").value;    
+    if (document.querySelector(".popup-radio:checked") === null) {
+        return alert("Select Notification Method");
+    }
+    const method = document.querySelector(".popup-radio:checked").value;   
 
     const data = {
         title: title,
@@ -93,9 +96,11 @@ document.querySelector("#create-reminder").addEventListener("click", () => {
     }).then((response) => {
         if (response.ok && response.status === 200) {
             alert("Reminder Successfully Made")
+            document.querySelector(`a[href*='${openAssessment}']`).parentElement.parentElement.querySelector(".reminder-button").innerText = "notifications_active";
         } else {
             alert("Reminder Creation Failed")
         }
+        closePopup();
     })
 });
 document.body.addEventListener("click", closePopup);
