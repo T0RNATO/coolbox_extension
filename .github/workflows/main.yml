@@ -68,7 +68,7 @@ jobs:
           # omitting it will create a new addon
           uuid: '{de7bb9b678c44811a736}'
           xpi: firefox.xpi
-          manifest: manifest.json
+          manifest: ./extension/manifest.json
           api-key: ${{ secrets.FIREFOX_API_KEY }}
           api-secret: ${{ secrets.FIREFOX_API_SECRET }}
 
