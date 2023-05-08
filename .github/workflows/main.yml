@@ -60,7 +60,7 @@ jobs:
           path: ./extension
         
       - name: Create zip
-        run: cd ./extension && zip -r -1 ../firefox.xpi ./
+        run: cd ./extension && zip -1 -r ../firefox.xpi ./
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
