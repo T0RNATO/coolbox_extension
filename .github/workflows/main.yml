@@ -21,7 +21,20 @@ jobs:
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           find: '1.1.1'
-          replace: ${{ steps.tag_version.outputs.new_tag }} | cut -c 2-
+          replace: version${{ steps.tag_version.outputs.new_tag }}
+          include: "**manifest.json"
+          regex: false
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: manifest.json
+          path: ./extension
+          
+      - name: Set Manifest Version Number
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: 'versionv0'
+          replace: "0"
           include: "**manifest.json"
           regex: false
           
