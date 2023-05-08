@@ -14,7 +14,7 @@
       "js": [
         "js/schoolbox.js",
         "js/flatpickr.js",
-        "js/popup.js"
+        "js/reminders.js"
       ],
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/"

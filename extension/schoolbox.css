@@ -87,14 +87,13 @@ hr {
     right: 5px;
     top: 5px;
     cursor: pointer;
-    background-image: url("chrome-extension://mkkkjlaajcmaflpaaodpdnindfecdemo/reminder_add.png");
-    background-size: contain;
-    filter: invert(0.7);
+    color: gray;
     transition: 0.2s;
+    font-size: 20px;
 }
 
 .reminder-button:hover {
-    filter: invert(0.3);
+    color: #444
 }
 
 #component52396 .card::after:hover {

@@ -4,7 +4,12 @@ chrome.runtime.sendMessage(null, (cook) => {
     cookie = cook.value;
     fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
         "Authorization": "Bearer " + cookie
-    })}).then(response => {response.json().then(json => {console.log(json)})})
+    })}).then(response => {response.json().then(reminders => {
+        console.log(reminders);
+        for (const reminder of reminders) {
+            document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button").innerText = "notifications_active";
+        }
+    })})
 })
 
 // If it's a weekend, fix the due work thing
@@ -19,14 +24,17 @@ news.remove()
 // Move it to the right column
 document.querySelector(".column-right").appendChild(news)
 
-// Create an observer for an element - the calender box
+let calendarUpdated = false;
+
+// Create an observer for the calender box
 const observer = new MutationObserver((mutationList) => {
     for (const mutation of mutationList) {
         // When the calendar element updates, and the week has appeared
         if (
             mutation.type === "childList" &&
             mutation.target.nodeName === "SPAN" &&
-            mutation.target.innerText.includes("Week")
+            mutation.target.innerText.includes("Week") &&
+            !calendarUpdated
             ) {
             
             // Extract the week number
@@ -37,6 +45,7 @@ const observer = new MutationObserver((mutationList) => {
 
             // Remove the observer
             observer.disconnect();
+            calendarUpdated = true;
         }
     }
 });
@@ -122,6 +131,16 @@ function updateTimetable() {
     fetch(location.href).then(data => {data.text().then(e => {
         document.querySelector("[data-timetable-container] section").replaceWith(c.parseFromString(e, "text/html").querySelector("[data-timetable-container] section"));
     })})
+}
+
+for (const dueWorkItem of document.querySelectorAll("#component52396 .card")) {
+    const reminderButton = document.createElement("div");
+    reminderButton.classList.add("reminder-button", "material-symbols-outlined");
+
+    reminderButton.innerText = `notification_add`;
+
+    reminderButton.addEventListener("click", (ev) => {openPopup(ev)})
+    dueWorkItem.appendChild(reminderButton);
 }
 
 // Update the timer every 10 seconds

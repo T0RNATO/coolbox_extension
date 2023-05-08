@@ -29,6 +29,8 @@ popup.innerHTML = /*html*/`
     </div>
 `
 
+let openAssessment = null;
+
 document.body.appendChild(popup);
 popup.addEventListener("click", (e) => {e.stopPropagation()});
 
@@ -43,6 +45,9 @@ function openPopup(ev) {
     let time = ev.target.parentElement.querySelector("span").title;
     time = time.replace("am", "AM").replace("pm", "PM");
 
+    openAssessment = ev.target.parentElement.querySelector("a").href.split("/");
+    openAssessment = Number(openAssessment[openAssessment.length - 2]);
+
     // Automatically select the time of the due work item
     timePicker.setDate(time, false, "l F J Y h:iK");
     popup.classList.add("display");
@@ -52,6 +57,7 @@ function closePopup() {
     document.querySelector(".popup").classList.remove("display");
     popup.querySelector("#rem-name").value = "";
     popup.querySelector("#link-assessment").checked = "false";
+    openAssessment = null;
 }
 let timePicker;
 
@@ -66,15 +72,13 @@ document.querySelector("#cancel-popup").addEventListener("click", closePopup);
 document.querySelector("#create-reminder").addEventListener("click", () => {
     const title = document.querySelector("#rem-name").value;
     const time = timePicker.selectedDates[0].getTime();
-    const method = document.querySelector(".popup-radio:checked").value;
-
-    
+    const method = document.querySelector(".popup-radio:checked").value;    
 
     const data = {
         title: title,
         due: time,
         method: method,
-        assessment: null
+        assessment: openAssessment
     }
 
     const headers = new Headers({
@@ -96,13 +100,7 @@ document.querySelector("#create-reminder").addEventListener("click", () => {
 });
 document.body.addEventListener("click", closePopup);
 
-for (const dueWorkItem of document.querySelectorAll("#component52396 .card")) {
-    const reminderButton = document.createElement("div");
-    reminderButton.classList.add("reminder-button");
-    reminderButton.addEventListener("click", (ev) => {openPopup(ev)})
-    dueWorkItem.appendChild(reminderButton);
-}
-
 document.head.innerHTML += /*html*/`
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 `
