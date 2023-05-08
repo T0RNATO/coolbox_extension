@@ -1,17 +1,3 @@
-// Get the schoolbox login cookie to authenticate with coolbox
-let cookie;
-chrome.runtime.sendMessage(null, (cook) => {
-    cookie = cook.value;
-    fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
-        "Authorization": "Bearer " + cookie
-    })}).then(response => {response.json().then(reminders => {
-        console.log(reminders);
-        for (const reminder of reminders) {
-            document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button").innerText = "notifications_active";
-        }
-    })})
-})
-
 // If it's a weekend, fix the due work thing
 if (document.querySelector("[data-timetable-container] section") === null) {
     document.querySelector(".column-right").classList.add("weekend");
@@ -133,15 +119,13 @@ function updateTimetable() {
     })})
 }
 
-for (const dueWorkItem of document.querySelectorAll("#component52396 .card")) {
-    const reminderButton = document.createElement("div");
-    reminderButton.classList.add("reminder-button", "material-symbols-outlined");
-
-    reminderButton.innerText = `notification_add`;
-
-    reminderButton.addEventListener("click", (ev) => {openPopup(ev)})
-    dueWorkItem.appendChild(reminderButton);
-}
+// Example reminder object {
+//     "id": 10,
+//     "title": "Electricity Test",
+//     "method": "desktop",
+//     "due": 1683640740000,
+//     "assessment": 64356
+// }
 
 // Update the timer every 10 seconds
 setInterval(updateTime, 10 * 1000)

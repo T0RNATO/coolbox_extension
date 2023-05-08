@@ -1,8 +1,31 @@
-const popup = document.createElement("div");
-popup.classList.add("popup");
-popup.innerHTML = /*html*/`
+// Get the schoolbox login cookie to authenticate with coolbox
+let cookie, headers;
+chrome.runtime.sendMessage(null, (cook) => {
+    cookie = cook.value;
+    fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
+        "Authorization": "Bearer " + cookie
+    })}).then(response => {response.json().then(reminders => {
+        console.log(reminders);
+        for (const reminder of reminders) {
+            if (reminder.assessment) {
+                const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+                buttonElement.innerText = "notifications_active";
+                buttonElement.dataset.reminder = JSON.stringify(reminder);
+            }
+        }
+        headers = new Headers({
+            "Authorization": "Bearer " + cookie,
+            "Content-Type": "application/json"
+        })
+    })})
+})
+
+const createReminderPopup = document.createElement("div");
+createReminderPopup.classList.add("popup");
+createReminderPopup.innerHTML = /*html*/`
     <div class="popup-title">
-        <h1><strong>Create Reminder</strong></h1>
+        <h1 id="create-title"><strong>Create Reminder</strong></h1>
+        <h1 id="edit-title"><strong>Edit Reminder</strong></h1>
     </div>
     <div class="popup-body">
         Name:
@@ -22,42 +45,129 @@ popup.innerHTML = /*html*/`
         <br><br>
         <span title="Ticking this will show the reminder as an assessment-specific reminder rather than a generic reminder">Associate with Asssessment:</span>
         <input type="checkbox" id="link-assessment" class="plain">
-        <div class="popup-buttons">
+        <div class="popup-buttons" id="create-buttons">
             <button class="submit popup-button" id="create-reminder">Create Reminder</button>
             <button class="popup-button" id="cancel-popup">Cancel</button>
+        </div>
+        <div class="popup-buttons hide" id="edit-buttons">
+            <button class="submit popup-button" id="delete-reminder">Delete Reminder</button>
+            <button class="popup-button" id="save-reminder">Save Reminder</button>
         </div>
     </div>
 `
 
-let openAssessment = null;
+const viewRemindersPopup = document.createElement("div");
+viewRemindersPopup.classList.add("popupView");
+viewRemindersPopup.innerHTML = /*html*/`
+    <div class="popup-title">
+        <h1><strong>Reminders</strong></h1>
+    </div>
+    <div class="popup-body">
+        
+    </div>
+`
 
-document.body.appendChild(popup);
-popup.addEventListener("click", (e) => {e.stopPropagation()});
+const reminderButtons = document.createElement("li");
+reminderButtons.innerHTML = /*html*/`
+    <div class="card small-12 rem-add-container">
+        <div class="button rem-button">
+            <span class="material-symbols-outlined">add</span>
+            Add Reminder
+        </div>
+        <div class="button rem-button">
+            <span class="material-symbols-outlined">visibility</span>
+            View All Reminders
+        </div>
+    </div>
+`
 
-function openPopup(ev) {
-    // Prevent popup from instantly closing
-    ev.stopPropagation();
+document.querySelector("#component52396 ul").appendChild(reminderButtons);
+
+const timeFormat = "l F J Y h:iK"
+
+let openReminder = null;
+
+document.body.appendChild(createReminderPopup);
+createReminderPopup.addEventListener("click", (e) => {e.stopPropagation()});
+
+function getAssessmentId(link) {
+    const sections = link.split("/");
+    return Number(sections[sections.length - 2]);
+}
+
+/**
+ * @param {Object} reminder
+ * @param {Number} reminder.id
+ * @param {Number|String} reminder.due
+ * @param {Number} reminder.assessment
+ * @param {String} reminder.title
+ * @param {String} reminder.method
+ * 
+ * @param {String} type - The type of the popup - "create" or "edit"
+*/
+function openPopup(reminder, type) {
+    // Save the open reminder
+    openReminder = reminder;
+
+    document.querySelector("#create-buttons").classList.add("hide");
+    document.querySelector("#edit-buttons").classList.add("hide");
+    
+    document.querySelector(`#${type}-buttons`).classList.remove("hide");
+
+    document.querySelector("#create-title").classList.add("hide");
+    document.querySelector("#edit-title").classList.add("hide");
+    
+    document.querySelector(`#${type}-title`).classList.remove("hide");
+
+    // Add default
+    if (!reminder.method) {
+        reminder.method = "desktop";
+    }
 
     // Set default input values
-    popup.querySelector("#rem-name").value = ev.target.parentElement.querySelector("h3").innerText;
-    popup.querySelector("#link-assessment").checked = "true";
+    createReminderPopup.querySelector("#rem-name").value = reminder.title;
+    createReminderPopup.querySelector("#link-assessment").checked = Boolean(reminder.assessment);
+    createReminderPopup.querySelector(`input[value=${reminder.method}]`).checked = true;
 
-    let time = ev.target.parentElement.querySelector("span").title;
-    time = time.replace("am", "AM").replace("pm", "PM");
-
-    openAssessment = ev.target.parentElement.querySelector("a").href.split("/");
-    openAssessment = Number(openAssessment[openAssessment.length - 2]);
 
     // Automatically select the time of the due work item
-    timePicker.setDate(time, false, "l F J Y h:iK");
-    popup.classList.add("display");
+    if (typeof reminder.due === "string") {
+        timePicker.setDate(reminder.due.replace("am", "AM").replace("fm", "FM"), false, timeFormat);
+    } else {
+        timePicker.setDate(reminder.due)
+    }
+    createReminderPopup.classList.add("display");
+}
+
+for (const dueWorkItem of document.querySelectorAll("#component52396 li:not(:last-child) .card")) {
+    const reminderButton = document.createElement("div");
+    reminderButton.classList.add("reminder-button", "material-symbols-outlined");
+
+    reminderButton.innerText = `notification_add`;
+
+    reminderButton.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        const button = ev.target;
+        if (button.dataset.reminder) {
+            openPopup(JSON.parse(button.dataset.reminder), "edit");
+        } else {
+            openPopup({
+                id: null,
+                title: button.parentElement.querySelector("h3").innerText,
+                method: null,
+                due: button.parentElement.querySelector("[title*=' ']").title,
+                assessment: getAssessmentId(button.parentElement.querySelector("a").href)
+            }, "create");
+        }
+    })
+    dueWorkItem.appendChild(reminderButton);
 }
 
 function closePopup() {
     document.querySelector(".popup").classList.remove("display");
-    popup.querySelector("#rem-name").value = "";
-    popup.querySelector("#link-assessment").checked = "false";
-    openAssessment = null;
+    createReminderPopup.querySelector("#rem-name").value = "";
+    createReminderPopup.querySelector("#link-assessment").checked = "false";
+    openReminder = null;
 }
 let timePicker;
 
@@ -69,7 +179,52 @@ window.addEventListener("load", () => {
 })
 
 document.querySelector("#cancel-popup").addEventListener("click", closePopup);
+
 document.querySelector("#create-reminder").addEventListener("click", () => {
+    const data = getPopupData();
+
+    request("POST", data).then((response) => {
+        if (response.ok && response.status === 200) {
+            alert("Reminder Successfully Made")
+            const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+            buttonElement.innerText = "notifications_active";
+
+            response.json().then((reminder) => {
+                buttonElement.dataset.reminder = JSON.stringify(reminder);
+            })
+        } else {
+            alert("Reminder Creation Failed")
+        }
+        closePopup();
+    })
+});
+
+document.querySelector("#save-reminder").addEventListener("click", () => {
+    const data = getPopupData();
+
+    request("PATCH", data).then((response) => {
+        if (response.ok && response.status === 200) {
+            alert("Reminder Successfully Edited")
+
+            response.json().then((reminder) => {
+                buttonElement.dataset.reminder = JSON.stringify(reminder);
+            })
+        } else {
+            alert("Reminder Editing Failed")
+        }
+        closePopup();
+    })
+});
+
+function request(method, body) {
+    return fetch("https://api.coolbox.lol/reminders", {
+        method: method,
+        body: JSON.stringify(body),
+        headers: headers
+    })
+}
+
+function getPopupData() {
     const title = document.querySelector("#rem-name").value;
     const time = timePicker.selectedDates[0].getTime();
     if (document.querySelector(".popup-radio:checked") === null) {
@@ -81,28 +236,16 @@ document.querySelector("#create-reminder").addEventListener("click", () => {
         title: title,
         due: time,
         method: method,
-        assessment: openAssessment
+        assessment: openReminder.assessment
     }
 
-    const headers = new Headers({
-        "Authorization": "Bearer " + cookie,
-        "Content-Type": "application/json"
-    })
+    if (openReminder.id) {
+        data.id = openReminder.id;
+    }
 
-    fetch("https://api.coolbox.lol/reminders", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: headers
-    }).then((response) => {
-        if (response.ok && response.status === 200) {
-            alert("Reminder Successfully Made")
-            document.querySelector(`a[href*='${openAssessment}']`).parentElement.parentElement.querySelector(".reminder-button").innerText = "notifications_active";
-        } else {
-            alert("Reminder Creation Failed")
-        }
-        closePopup();
-    })
-});
+    return data;
+}
+
 document.body.addEventListener("click", closePopup);
 
 document.head.innerHTML += /*html*/`

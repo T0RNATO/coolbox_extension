@@ -100,7 +100,7 @@ hr {
     filter: invert(0.4);
 }
 
-.popup {
+.popup, .popupView {
     display: none;
     position: absolute;
     background: var(--body-background);
@@ -113,7 +113,7 @@ hr {
     filter: drop-shadow(2px 4px 6px gray);
 }
 
-.popup.display {
+.popup.display, .popupView.display {
     display: block;
 }
 
@@ -142,6 +142,23 @@ hr {
 
 .popup-radio:checked + label {
     outline: solid 1px var(--content-ui-foreground);
+}
+
+.rem-button {
+    flex: 1;
+    margin: 3px !important;
+}
+
+.rem-add-container {
+    display: flex;
+}
+
+.popup-buttons.hide {
+    display: none;
+}
+
+#delete-reminder {
+    background: #c82644 !important;
 }
 
 /* #tileList-2248 {
