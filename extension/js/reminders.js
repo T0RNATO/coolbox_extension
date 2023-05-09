@@ -185,7 +185,6 @@ document.querySelector("#create-reminder").addEventListener("click", () => {
 
     request("POST", data).then((response) => {
         if (response.ok && response.status === 200) {
-            alert("Reminder Successfully Made")
             const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
             buttonElement.innerText = "notifications_active";
 
@@ -204,8 +203,6 @@ document.querySelector("#save-reminder").addEventListener("click", () => {
 
     request("PATCH", data).then((response) => {
         if (response.ok && response.status === 200) {
-            alert("Reminder Successfully Edited")
-
             response.json().then((reminder) => {
                 const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
                 buttonElement.dataset.reminder = JSON.stringify(reminder);
@@ -223,8 +220,6 @@ document.querySelector("#delete-reminder").addEventListener("click", () => {
 
     request("DELETE", data).then((response) => {
         if (response.ok && response.status === 200) {
-            alert("Reminder Successfully Deleted")
-
             const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
             delete buttonElement.dataset.reminder;
             buttonElement.innerText = "notification_add";
