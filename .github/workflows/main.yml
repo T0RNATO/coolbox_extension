@@ -50,6 +50,9 @@ jobs:
         with:
           name: chrome-based.zip
           path: ./
+          
+      - name: Check if its there
+        run: ls
         
       - uses: trmcnvn/chrome-addon@v2
         with:
