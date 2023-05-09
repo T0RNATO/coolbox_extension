@@ -102,7 +102,7 @@ hr {
 
 .popup, .popupView {
     display: none;
-    position: absolute;
+    position: fixed;
     background: var(--body-background);
     width: 600px;
     height: 480px;
