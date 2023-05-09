@@ -117,6 +117,10 @@ hr {
     display: block;
 }
 
+.popupView {
+    overflow-y: auto;
+}
+
 .popup-body {
     padding: 15px;
 }
@@ -159,6 +163,28 @@ hr {
 
 #delete-reminder {
     background: #c82644 !important;
+}
+
+.align {
+    vertical-align: bottom;
+}
+
+.rem-display {
+    border: 2px solid gray;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.rem-view-edit {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.rem-view-button {
+    color: gray;
+    cursor: pointer;
 }
 
 /* #tileList-2248 {

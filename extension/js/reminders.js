@@ -1,10 +1,11 @@
 // Get the schoolbox login cookie to authenticate with coolbox
-let cookie, headers;
+let cookie, headers, currentReminders;
 chrome.runtime.sendMessage(null, (cook) => {
     cookie = cook.value;
     fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
         "Authorization": "Bearer " + cookie
     })}).then(response => {response.json().then(reminders => {
+        currentReminders = reminders;
         console.log(reminders);
         for (const reminder of reminders) {
             if (reminder.assessment) {
@@ -62,20 +63,20 @@ viewRemindersPopup.innerHTML = /*html*/`
     <div class="popup-title">
         <h1><strong>Reminders</strong></h1>
     </div>
-    <div class="popup-body">
-        
+    <div class="popup-body" id="view-rem-container">
+        Loading...
     </div>
 `
 
 const reminderButtons = document.createElement("li");
 reminderButtons.innerHTML = /*html*/`
     <div class="card small-12 rem-add-container">
-        <div class="button rem-button">
-            <span class="material-symbols-outlined">add</span>
+        <div class="button rem-button" id="add-rem">
+            <span class="material-symbols-outlined align">add</span>
             Add Reminder
         </div>
-        <div class="button rem-button">
-            <span class="material-symbols-outlined">visibility</span>
+        <div class="button rem-button" id="view-rems">
+            <span class="material-symbols-outlined align">visibility</span>
             View All Reminders
         </div>
     </div>
@@ -88,7 +89,9 @@ const timeFormat = "l F J Y h:iK"
 let openReminder = null;
 
 document.body.appendChild(createReminderPopup);
+document.body.appendChild(viewRemindersPopup);
 createReminderPopup.addEventListener("click", (e) => {e.stopPropagation()});
+viewRemindersPopup.addEventListener("click", (e) => {e.stopPropagation()});
 
 function getAssessmentId(link) {
     const sections = link.split("/");
@@ -165,6 +168,7 @@ for (const dueWorkItem of document.querySelectorAll("#component52396 li:not(:las
 
 function closePopup() {
     document.querySelector(".popup").classList.remove("display");
+    document.querySelector(".popupView").classList.remove("display");
     createReminderPopup.querySelector("#rem-name").value = "";
     createReminderPopup.querySelector("#link-assessment").checked = "false";
     openReminder = null;
@@ -172,7 +176,7 @@ function closePopup() {
 let timePicker;
 
 window.addEventListener("load", () => {
-    timePicker = flatpickr("#rem-time", {dateFormat: "l F J Y h:iK", enableTime: true, minDate: new Date()});
+    timePicker = flatpickr("#rem-time", {dateFormat: timeFormat, enableTime: true, minDate: new Date()});
     timePicker.calendarContainer.addEventListener("click", (ev) => {
         ev.stopPropagation();
     })
@@ -185,12 +189,12 @@ document.querySelector("#create-reminder").addEventListener("click", () => {
 
     request("POST", data).then((response) => {
         if (response.ok && response.status === 200) {
-            alert("Reminder Successfully Made")
-            const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
-            buttonElement.innerText = "notifications_active";
-
             response.json().then((reminder) => {
                 buttonElement.dataset.reminder = JSON.stringify(reminder);
+                if (reminder.assessment) {
+                    const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+                    buttonElement.innerText = "notifications_active";
+                }
             })
         } else {
             alert("Reminder Creation Failed")
@@ -204,8 +208,6 @@ document.querySelector("#save-reminder").addEventListener("click", () => {
 
     request("PATCH", data).then((response) => {
         if (response.ok && response.status === 200) {
-            alert("Reminder Successfully Edited")
-
             response.json().then((reminder) => {
                 const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
                 buttonElement.dataset.reminder = JSON.stringify(reminder);
@@ -219,21 +221,68 @@ document.querySelector("#save-reminder").addEventListener("click", () => {
 });
 
 document.querySelector("#delete-reminder").addEventListener("click", () => {
-    const data = {id: openReminder.id};
+    deleteReminder(openReminder, () => {
+        closePopup();
+    })
+});
 
-    request("DELETE", data).then((response) => {
+document.querySelector("#view-rems").addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    viewRemindersPopup.classList.add("display");
+    updateViewRemindersPopup();
+})
+
+function updateViewRemindersPopup() {
+    fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
+        "Authorization": "Bearer " + cookie
+    })}).then(response => {response.json().then(reminders => {
+        currentReminders = reminders;
+
+        const container = viewRemindersPopup.querySelector("#view-rem-container");
+        container.innerHTML = "";
+        for (const [i, reminder] of Object.entries(reminders)) {
+            container.innerHTML += /*html*/`
+                <div class="rem-display" data-id="${i}">
+                    <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
+                    ${flatpickr.formatDate(new Date(reminder.due), timeFormat)}
+                    <div class="rem-view-edit">
+                        <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
+                        <span class="material-symbols-outlined rem-view-button rem-view-delete">delete</span>
+                    </div>
+                </div>
+            `
+            const newEl = viewRemindersPopup.querySelector(".rem-display:last-child");
+
+            newEl.querySelector(".rem-view-delete").addEventListener("click", (ev) => {
+                const rem = currentReminders[ev.target.parentElement.parentElement.dataset.id]
+                deleteReminder(rem, () => {
+                    updateViewRemindersPopup();
+                })
+            })
+            newEl.querySelector(".rem-view-edit-b").addEventListener("click", (ev) => {
+                const rem = currentReminders[ev.target.parentElement.parentElement.dataset.id]
+                closePopup();
+                openPopup(rem, "edit");
+            })
+        }
+        if (reminders.length === 0) {
+            container.innerHTML = "You have no reminders";
+        }
+    })})
+}
+
+function deleteReminder(reminder, then) {
+    request("DELETE", {id: reminder.id}).then((response) => {
         if (response.ok && response.status === 200) {
-            alert("Reminder Successfully Deleted")
-
-            const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+            const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
             delete buttonElement.dataset.reminder;
             buttonElement.innerText = "notification_add";
         } else {
             alert("Reminder Deletion Failed")
         }
-        closePopup();
+        then();
     })
-});
+}
 
 function request(method, body) {
     return fetch("https://api.coolbox.lol/reminders", {
