@@ -54,10 +54,11 @@ jobs:
       - name: Check if its there
         run: ls
         
-      - uses: trmcnvn/chrome-addon@v2
+      - name: Upload & release
+        uses: mnao305/chrome-extension-upload@v4.0.1
         with:
-          extension: kjaoemamgcopdbdpenkanjinaodmihpo
-          zip: ./chrome-based.zip
+          file-path: chrome-based.zip
+          extension-id: kjaoemamgcopdbdpenkanjinaodmihpo
           client-id: ${{ secrets.CHROME_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
