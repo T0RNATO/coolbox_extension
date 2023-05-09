@@ -46,22 +46,22 @@ jobs:
       - name: Create zip
         run: cd ./extension && zip -r ../chrome-based.zip ./
         
-      - uses: actions/upload-artifact@v3
-        with:
-          name: chrome-based.zip
-          path: ./
+#       - uses: actions/upload-artifact@v3
+#         with:
+#           name: chrome-based.zip
+#           path: ./
           
-      - name: Check if its there
-        run: ls
+#       - name: Check if its there
+#         run: ls
         
-      - name: Upload & release
-        uses: mnao305/chrome-extension-upload@v4.0.1
-        with:
-          file-path: chrome-based.zip
-          extension-id: kjaoemamgcopdbdpenkanjinaodmihpo
-          client-id: ${{ secrets.CHROME_CLIENT_ID }}
-          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+#       - name: Upload & release
+#         uses: mnao305/chrome-extension-upload@v4.0.1
+#         with:
+#           file-path: chrome-based.zip
+#           extension-id: kjaoemamgcopdbdpenkanjinaodmihpo
+#           client-id: ${{ secrets.CHROME_CLIENT_ID }}
+#           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+#           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
         
       - name: Fix Manifest
         uses: jacobtomlinson/gha-find-replace@v3
