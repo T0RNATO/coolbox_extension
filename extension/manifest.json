@@ -40,7 +40,7 @@
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "addon@coolbox.lol"
+      "id": "extension@coolbox.lol"
     }
   }
 }
