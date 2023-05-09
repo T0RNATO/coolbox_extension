@@ -46,6 +46,15 @@ jobs:
       - name: Create zip
         run: cd ./extension && zip -r ../chrome-based.zip ./
         
+      - uses: trmcnvn/chrome-addon@v2
+        with:
+          extension: kjaoemamgcopdbdpenkanjinaodmihpo
+          zip: chrome-based.zip
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          publishTarget: unlisted
+        
       - name: Fix Manifest
         uses: jacobtomlinson/gha-find-replace@v3
         with:
