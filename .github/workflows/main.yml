@@ -46,13 +46,14 @@ jobs:
       - name: Create zip
         run: cd ./extension && zip -r ../chrome-based.zip ./
         
-      - uses: trmcnvn/chrome-addon@v2
+      - uses: Klemensas/chrome-extension-upload-action@$VERSION
         with:
-          extension: kjaoemamgcopdbdpenkanjinaodmihpo
-          zip: ./chrome-based.zip
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
           client-id: ${{ secrets.CHROME_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          file-name: './chrome-based.zip'
+          app-id: 'kjaoemamgcopdbdpenkanjinaodmihpo'
+          publish: true
         
       - name: Fix Manifest
         uses: jacobtomlinson/gha-find-replace@v3
