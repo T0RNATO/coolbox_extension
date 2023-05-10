@@ -1,5 +1,5 @@
 // Get the schoolbox login cookie to authenticate with coolbox
-let cookie, headers, currentReminders;
+let cookie, headers, currentReminders, discordAuthenticated;
 chrome.runtime.sendMessage(null, (cook) => {
     cookie = cook.value;
     fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
@@ -18,6 +18,12 @@ chrome.runtime.sendMessage(null, (cook) => {
             "Authorization": "Bearer " + cookie,
             "Content-Type": "application/json"
         })
+    })})
+    document.querySelector("#auth").href = "https://discord.com/oauth2/authorize?client_id=999205944133177365&redirect_uri=https%3A%2F%2Fapi.coolbox.lol%2Fdiscord&response_type=code&scope=identify&state=" + cookie;
+    fetch("https://api.coolbox.lol/user", {method: "GET", headers: new Headers({
+        Authorization: "Bearer " + cookie
+    })}).then(response => {response.json().then(json => {
+        discordAuthenticated = json.discord.linked;
     })})
 })
 
@@ -43,9 +49,9 @@ createReminderPopup.innerHTML = /*html*/`
         <input type="radio" id="both" value="both" class="plain popup-radio" name="notif-method">
         <label for="both" class="popup-label button">Both</label>
 
-        <br><br>
-        <span title="Ticking this will show the reminder as an assessment-specific reminder rather than a generic reminder">Associate with Asssessment:</span>
-        <input type="checkbox" id="link-assessment" class="plain">
+        <span id="discord-warning" class="notif-warning">You must <a id="auth">Authenticate</a> to get notified on Discord.</span>
+        <span id="sys-warning" class="notif-warning">System Notifications are not fully implemented yet.</span>
+
         <div class="popup-buttons" id="create-buttons">
             <button class="submit popup-button" id="create-reminder">Create Reminder</button>
             <button class="popup-button" id="cancel-popup">Cancel</button>
@@ -55,7 +61,24 @@ createReminderPopup.innerHTML = /*html*/`
             <button class="popup-button" id="save-reminder">Save Reminder</button>
         </div>
     </div>
-`
+`;
+
+function updateWarnings(clicked) {
+    createReminderPopup.querySelector("#discord-warning").classList.remove("display");
+    createReminderPopup.querySelector("#sys-warning").classList.remove("display");
+
+    if ((clicked === "discord" || clicked === "both") && !discordAuthenticated) {
+        createReminderPopup.querySelector("#discord-warning").classList.add("display");
+    }
+
+    if (clicked === "desktop" || clicked === "both") {
+        createReminderPopup.querySelector("#sys-warning").classList.add("display");
+    }
+}
+
+createReminderPopup.querySelectorAll("input[name='notif-method']").forEach(input => {
+    input.addEventListener("click", (event) => {updateWarnings(event.target.value)});
+})
 
 const viewRemindersPopup = document.createElement("div");
 viewRemindersPopup.classList.add("popupView");
@@ -129,9 +152,8 @@ function openPopup(reminder, type) {
 
     // Set default input values
     createReminderPopup.querySelector("#rem-name").value = reminder.title;
-    createReminderPopup.querySelector("#link-assessment").checked = Boolean(reminder.assessment);
     createReminderPopup.querySelector(`input[value=${reminder.method}]`).checked = true;
-
+    updateWarnings(reminder.method);
 
     // Automatically select the time of the due work item
     if (typeof reminder.due === "string") {
@@ -170,17 +192,16 @@ function closePopup() {
     document.querySelector(".popup").classList.remove("display");
     document.querySelector(".popupView").classList.remove("display");
     createReminderPopup.querySelector("#rem-name").value = "";
-    createReminderPopup.querySelector("#link-assessment").checked = "false";
     openReminder = null;
 }
 let timePicker;
 
-window.addEventListener("load", () => {
-    timePicker = flatpickr("#rem-time", {dateFormat: timeFormat, enableTime: true, minDate: new Date()});
+window.onload = () => {
+    timePicker = flatpickr("#rem-time", {dateFormat: timeFormat, enableTime: true, minDate: new Date(), allowInput: true});
     timePicker.calendarContainer.addEventListener("click", (ev) => {
         ev.stopPropagation();
     })
-})
+}
 
 document.querySelector("#cancel-popup").addEventListener("click", closePopup);
 
@@ -190,9 +211,9 @@ document.querySelector("#create-reminder").addEventListener("click", () => {
     request("POST", data).then((response) => {
         if (response.ok && response.status === 200) {
             response.json().then((reminder) => {
-                buttonElement.dataset.reminder = JSON.stringify(reminder);
                 if (reminder.assessment) {
-                    const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+                    const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+                    buttonElement.dataset.reminder = JSON.stringify(reminder);
                     buttonElement.innerText = "notifications_active";
                 }
             })
@@ -209,8 +230,10 @@ document.querySelector("#save-reminder").addEventListener("click", () => {
     request("PATCH", data).then((response) => {
         if (response.ok && response.status === 200) {
             response.json().then((reminder) => {
-                const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
-                buttonElement.dataset.reminder = JSON.stringify(reminder);
+                if (reminder.assessment) {
+                    const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+                    buttonElement.dataset.reminder = JSON.stringify(reminder);
+                }
                 closePopup();
             })
         } else {
@@ -230,6 +253,16 @@ document.querySelector("#view-rems").addEventListener("click", (ev) => {
     ev.stopPropagation();
     viewRemindersPopup.classList.add("display");
     updateViewRemindersPopup();
+})
+
+document.querySelector("#add-rem").addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    openPopup({
+        due: Date.now(),
+        assessment: null,
+        title: "New Reminder",
+        method: "desktop"
+    }, "create");
 })
 
 function updateViewRemindersPopup() {
@@ -274,9 +307,11 @@ function updateViewRemindersPopup() {
 function deleteReminder(reminder, then) {
     request("DELETE", {id: reminder.id}).then((response) => {
         if (response.ok && response.status === 200) {
-            const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
-            delete buttonElement.dataset.reminder;
-            buttonElement.innerText = "notification_add";
+            if (reminder.assessment) {
+                const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+                delete buttonElement.dataset.reminder;
+                buttonElement.innerText = "notification_add";
+            }
         } else {
             alert("Reminder Deletion Failed")
         }
@@ -297,6 +332,9 @@ function getPopupData() {
     const time = timePicker.selectedDates[0].getTime();
     if (document.querySelector(".popup-radio:checked") === null) {
         return alert("Select Notification Method");
+    }
+    if (title === "") {
+        return alert("Enter a Title");
     }
     const method = document.querySelector(".popup-radio:checked").value;   
 

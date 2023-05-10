@@ -113,8 +113,8 @@ hr {
     filter: drop-shadow(2px 4px 6px gray);
 }
 
-.popup.display, .popupView.display {
-    display: block;
+.display {
+    display: block !important;
 }
 
 .popupView {
@@ -185,6 +185,11 @@ hr {
 .rem-view-button {
     color: gray;
     cursor: pointer;
+}
+
+.notif-warning {
+    color: red;
+    display: none;
 }
 
 /* #tileList-2248 {
