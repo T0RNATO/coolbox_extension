@@ -1,8 +1,5 @@
 name: Create-Release
-on:
-  push:
-    paths:
-      - extension/**
+on: workflow_dispatch
 jobs:
   To-Zip:
     runs-on: ubuntu-latest
