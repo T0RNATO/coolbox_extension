@@ -19,6 +19,10 @@ li.tile {
     padding-bottom: 18% !important;
 }
 
+li.tile:hover {
+    transform: scale(1.05);
+}
+
 li.tile:nth-of-type(1) { --rotate: 0;}
 li.tile:nth-of-type(2) { --rotate: 24;}
 li.tile:nth-of-type(3) { --rotate: 48;}
@@ -163,6 +167,10 @@ hr {
 
 #delete-reminder {
     background: #c82644 !important;
+}
+
+#delete-reminder:hover {
+    background: #f05f79 !important;
 }
 
 .align {

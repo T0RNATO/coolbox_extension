@@ -19,7 +19,7 @@ chrome.runtime.sendMessage(null, (cook) => {
             "Content-Type": "application/json"
         })
     })})
-    document.querySelector("#auth").href = "https://discord.com/oauth2/authorize?client_id=999205944133177365&redirect_uri=https%3A%2F%2Fapi.coolbox.lol%2Fdiscord&response_type=code&scope=identify&state=" + cookie;
+    document.querySelector("#auth").href = "https://api.coolbox.lol/discord/redirect?state=" + cookie;
     fetch("https://api.coolbox.lol/user", {method: "GET", headers: new Headers({
         Authorization: "Bearer " + cookie
     })}).then(response => {response.json().then(json => {
@@ -53,8 +53,8 @@ createReminderPopup.innerHTML = /*html*/`
         <span id="sys-warning" class="notif-warning">System Notifications are not fully implemented yet.</span>
 
         <div class="popup-buttons" id="create-buttons">
-            <button class="submit popup-button" id="create-reminder">Create Reminder</button>
             <button class="popup-button" id="cancel-popup">Cancel</button>
+            <button class="submit popup-button" id="create-reminder">Create Reminder</button>
         </div>
         <div class="popup-buttons hide" id="edit-buttons">
             <button class="submit popup-button" id="delete-reminder">Delete Reminder</button>
