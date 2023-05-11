@@ -1,9 +1,8 @@
-name: Zip
+name: Create-Release
 on:
   push:
     paths:
       - extension/**
-      - .github/**
 jobs:
   To-Zip:
     runs-on: ubuntu-latest
@@ -92,6 +91,6 @@ jobs:
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          tag: v0.0.45
+          name: Release v0.0.45
           artifacts: "chrome-based.zip, firefox.xpi"
