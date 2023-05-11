@@ -88,6 +88,6 @@ jobs:
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
-          tag: v0.0.45
-          name: Release v0.0.45
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
           artifacts: "chrome-based.zip, firefox.xpi"
