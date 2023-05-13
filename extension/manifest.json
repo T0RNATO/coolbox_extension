@@ -9,12 +9,12 @@
   "content_scripts": [
     {
       "css": [
-        "schoolbox.css"
+        "css/schoolbox.css"
       ],
       "js": [
         "js/schoolbox.js",
         "js/flatpickr.js",
-        "js/reminders.js"
+        "js/reminders.js"   
       ],
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/"
@@ -22,7 +22,8 @@
     }
   ],
   "host_permissions": [
-    "https://schoolbox.donvale.vic.edu.au/"
+    "https://schoolbox.donvale.vic.edu.au/",
+    "https://*.coolbox.lol/"
   ],
   "web_accessible_resources": [
     {
@@ -33,14 +34,22 @@
     }
   ],
   "background": {
-    "service_worker": "service_worker.js"
+    "service_worker": "js/service_worker.js"
   },
   "permissions": [
-    "cookies"
+    "cookies",
+    "alarms",
+    "notifications"
   ],
   "browser_specific_settings": {
     "gecko": {
       "id": "extension@coolbox.lol"
     }
+  },
+  "action": {
+    "default_icon": {
+      "64": "icon.png"
+    },
+    "default_popup": "settings.html"
   }
 }

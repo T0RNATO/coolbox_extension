@@ -1,5 +1,7 @@
+const isWeekend = document.querySelector("[data-timetable-container] section") === null;
+
 // If it's a weekend, fix the due work thing
-if (document.querySelector("[data-timetable-container] section") === null) {
+if (isWeekend) {
     document.querySelector(".column-right").classList.add("weekend");
 }
 
@@ -15,6 +17,7 @@ let calendarUpdated = false;
 // Create an observer for the calender box
 const observer = new MutationObserver((mutationList) => {
     for (const mutation of mutationList) {
+        console.log(mutation);
         // When the calendar element updates, and the week has appeared
         if (
             mutation.type === "childList" &&
@@ -44,8 +47,10 @@ let timeLeft = document.createElement("span");
 timeLeft.id = "timeLeft"
 
 // Add that element to the dom
-document.querySelector("#content > .row:first-of-type").appendChild(timeLeft);
-document.querySelector("#content > .row:first-of-type").appendChild(document.createElement("hr"));
+if (!isWeekend) {
+    document.querySelector("#content > .row:first-of-type").appendChild(timeLeft);
+    document.querySelector("#content > .row:first-of-type").appendChild(document.createElement("hr"));
+}
 
 const periods = [];
 
@@ -83,7 +88,7 @@ function updateTime() {
 
     // If nonexistent, school is
     if (targetPeriod === undefined) {
-        document.querySelector("#timeLeft").innerHTML = "Day is over!"
+        document.querySelector("#timeLeft").innerHTML = "";
         inPeriod = false;
     
     // If you are currently inside a period
@@ -119,18 +124,20 @@ function updateTimetable() {
     })})
 }
 
-// Example reminder object {
-//     "id": 10,
-//     "title": "Electricity Test",
-//     "method": "desktop",
-//     "due": 1683640740000,
-//     "assessment": 64356
-// }
+if (!isWeekend) {
+    // Update the timer every 10 seconds
+    setInterval(updateTime, 10 * 1000)
+    updateTime();
 
-// Update the timer every 10 seconds
-setInterval(updateTime, 10 * 1000)
+    const greeting = document.querySelector("#component9");
+    const timetableParent = document.querySelector("#component36911");
 
-updateTime();
+    const divider = document.createElement("hr");
+    divider.classList.add("topHr");
+
+    timetableParent.insertBefore(divider, timetableParent.children[0]);
+    timetableParent.insertBefore(greeting, timetableParent.children[0]);
+}
 
 // EXPERIMENTAL QUICK NOTES
 // const reminders = document.createElement("div");

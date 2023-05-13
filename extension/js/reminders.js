@@ -1,6 +1,6 @@
 // Get the schoolbox login cookie to authenticate with coolbox
 let cookie, headers, currentReminders, discordAuthenticated;
-chrome.runtime.sendMessage(null, (cook) => {
+chrome.runtime.sendMessage("getCookie", (cook) => {
     cookie = cook.value;
     fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
         "Authorization": "Bearer " + cookie
@@ -27,6 +27,12 @@ chrome.runtime.sendMessage(null, (cook) => {
     })})
 })
 
+let editFromViewPopup = false;
+
+function updateAlarms() {
+    chrome.runtime.sendMessage("createAlarms");
+}
+
 const createReminderPopup = document.createElement("div");
 createReminderPopup.classList.add("popup");
 createReminderPopup.innerHTML = /*html*/`
@@ -50,7 +56,7 @@ createReminderPopup.innerHTML = /*html*/`
         <label for="both" class="popup-label button">Both</label>
 
         <span id="discord-warning" class="notif-warning">You must <a id="auth">Authenticate</a> to get notified on Discord.</span>
-        <span id="sys-warning" class="notif-warning">System Notifications are not fully implemented yet.</span>
+        <span id="sys-warning" class="notif-warning">Note: Requires system notifications to be enabled for your browser.</span>
 
         <div class="popup-buttons" id="create-buttons">
             <button class="popup-button" id="cancel-popup">Cancel</button>
@@ -172,6 +178,7 @@ for (const dueWorkItem of document.querySelectorAll("#component52396 li:not(:las
 
     reminderButton.addEventListener("click", (ev) => {
         ev.stopPropagation();
+        closePopup();
         const button = ev.target;
         if (button.dataset.reminder) {
             openPopup(JSON.parse(button.dataset.reminder), "edit");
@@ -216,6 +223,7 @@ document.querySelector("#create-reminder").addEventListener("click", () => {
                     buttonElement.dataset.reminder = JSON.stringify(reminder);
                     buttonElement.innerText = "notifications_active";
                 }
+                updateAlarms();
             })
         } else {
             alert("Reminder Creation Failed")
@@ -235,6 +243,12 @@ document.querySelector("#save-reminder").addEventListener("click", () => {
                     buttonElement.dataset.reminder = JSON.stringify(reminder);
                 }
                 closePopup();
+                updateAlarms();
+                if (editFromViewPopup) {
+                    editFromViewPopup = false;
+                    viewRemindersPopup.classList.add("display");
+                    updateViewRemindersPopup();
+                }
             })
         } else {
             alert("Reminder Editing Failed");
@@ -251,12 +265,14 @@ document.querySelector("#delete-reminder").addEventListener("click", () => {
 
 document.querySelector("#view-rems").addEventListener("click", (ev) => {
     ev.stopPropagation();
+    closePopup();
     viewRemindersPopup.classList.add("display");
     updateViewRemindersPopup();
 })
 
 document.querySelector("#add-rem").addEventListener("click", (ev) => {
     ev.stopPropagation();
+    closePopup();
     openPopup({
         due: Date.now(),
         assessment: null,
@@ -285,7 +301,7 @@ function updateViewRemindersPopup() {
                 </div>
             `
             const newEl = viewRemindersPopup.querySelector(".rem-display:last-child");
-
+            
             newEl.querySelector(".rem-view-delete").addEventListener("click", (ev) => {
                 const rem = currentReminders[ev.target.parentElement.parentElement.dataset.id]
                 deleteReminder(rem, () => {
@@ -295,6 +311,7 @@ function updateViewRemindersPopup() {
             newEl.querySelector(".rem-view-edit-b").addEventListener("click", (ev) => {
                 const rem = currentReminders[ev.target.parentElement.parentElement.dataset.id]
                 closePopup();
+                editFromViewPopup = true;
                 openPopup(rem, "edit");
             })
         }
@@ -307,6 +324,7 @@ function updateViewRemindersPopup() {
 function deleteReminder(reminder, then) {
     request("DELETE", {id: reminder.id}).then((response) => {
         if (response.ok && response.status === 200) {
+            updateAlarms();
             if (reminder.assessment) {
                 const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
                 delete buttonElement.dataset.reminder;
