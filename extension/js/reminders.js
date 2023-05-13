@@ -55,7 +55,7 @@ createReminderPopup.innerHTML = /*html*/`
         <input type="radio" id="both" value="both" class="plain popup-radio" name="notif-method">
         <label for="both" class="popup-label button">Both</label>
 
-        <span id="discord-warning" class="notif-warning">You must <a id="auth">Authenticate</a> to get notified on Discord.</span>
+        <span id="discord-warning" class="notif-warning">You must <a id="auth">authenticate</a> to get notified on Discord.</span>
         <span id="sys-warning" class="notif-warning">Note: Requires system notifications to be enabled for your browser.</span>
 
         <div class="popup-buttons" id="create-buttons">
