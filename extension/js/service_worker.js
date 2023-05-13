@@ -34,8 +34,8 @@ chrome.alarms.onAlarm.addListener((alarm) => {
             type: "basic"
         }
 
-        // If firefox 💀 (doesn't support a bunch of stuff)
-        if (browser) {
+        // (Firefox doesn't support a bunch of stuff)
+        if (chrome.runtime.getURL('').startsWith('moz-extension://')) {
             delete options.buttons;
             delete options.requireInteraction;
         }
