@@ -1,9 +1,5 @@
-name: Zip
-on:
-  push:
-    paths:
-      - extension/**
-      - .github/**
+name: Create-Release
+on: workflow_dispatch
 jobs:
   To-Zip:
     runs-on: ubuntu-latest
