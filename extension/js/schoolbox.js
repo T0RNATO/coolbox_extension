@@ -17,7 +17,6 @@ let calendarUpdated = false;
 // Create an observer for the calender box
 const observer = new MutationObserver((mutationList) => {
     for (const mutation of mutationList) {
-        console.log(mutation);
         // When the calendar element updates, and the week has appeared
         if (
             mutation.type === "childList" &&

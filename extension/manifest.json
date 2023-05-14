@@ -22,8 +22,7 @@
     }
   ],
   "host_permissions": [
-    "https://schoolbox.donvale.vic.edu.au/",
-    "https://*.coolbox.lol/"
+    "https://schoolbox.donvale.vic.edu.au/"
   ],
   "web_accessible_resources": [
     {
