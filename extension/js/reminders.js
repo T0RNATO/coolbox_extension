@@ -2,9 +2,13 @@
 let cookie, headers, currentReminders, discordAuthenticated;
 chrome.runtime.sendMessage("getCookie", (cook) => {
     cookie = cook.value;
-    fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
-        "Authorization": "Bearer " + cookie
-    })}).then(response => {response.json().then(reminders => {
+
+    headers = new Headers({
+        "Authorization": "Bearer " + cookie,
+        "Content-Type": "application/json"
+    })
+
+    apiGet("reminders", (reminders) => {
         currentReminders = reminders;
         console.log(reminders);
         for (const reminder of reminders) {
@@ -14,17 +18,13 @@ chrome.runtime.sendMessage("getCookie", (cook) => {
                 buttonElement.dataset.reminder = JSON.stringify(reminder);
             }
         }
-        headers = new Headers({
-            "Authorization": "Bearer " + cookie,
-            "Content-Type": "application/json"
-        })
-    })})
+    })
+
     document.querySelector("#auth").href = "https://api.coolbox.lol/discord/redirect?state=" + cookie;
-    fetch("https://api.coolbox.lol/user", {method: "GET", headers: new Headers({
-        Authorization: "Bearer " + cookie
-    })}).then(response => {response.json().then(json => {
-        discordAuthenticated = json.discord.linked;
-    })})
+
+    apiGet("user", (data) => {
+        discordAuthenticated = data.discord.linked;
+    })
 })
 
 let editFromViewPopup = false;
@@ -111,6 +111,37 @@ reminderButtons.innerHTML = /*html*/`
     </div>
 `
 
+function updateViewRemindersPopup() {
+    apiGet("reminders", (reminders) => {
+        currentReminders = reminders;
+
+        const container = viewRemindersPopup.querySelector("#view-rem-container");
+        container.innerHTML = "";
+        for (const [i, reminder] of Object.entries(reminders)) {
+            container.innerHTML += /*html*/`
+                <div class="rem-display" data-id="${i}">
+                    <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
+                    ${flatpickr.formatDate(new Date(reminder.due), timeFormat)}
+                    <div class="rem-view-edit">
+                        <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
+                    </div>
+                </div>
+            `
+            const newEl = viewRemindersPopup.querySelector(".rem-display:last-child");
+            
+            newEl.querySelector(".rem-view-edit-b").addEventListener("click", (ev) => {
+                const rem = currentReminders[ev.target.parentElement.parentElement.dataset.id]
+                closePopup();
+                editFromViewPopup = true;
+                openReminderEditPopup(rem, "edit");
+            })
+        }
+        if (reminders.length === 0) {
+            container.innerHTML = "You have no reminders";
+        }
+    })
+}
+
 document.querySelector("#component52396 ul").appendChild(reminderButtons);
 
 const timeFormat = "l F J Y h:iK"
@@ -137,7 +168,7 @@ function getAssessmentId(link) {
  * 
  * @param {String} type - The type of the popup - "create" or "edit"
 */
-function openPopup(reminder, type) {
+function openReminderEditPopup(reminder, type) {
     // Save the open reminder
     openReminder = reminder;
 
@@ -170,28 +201,30 @@ function openPopup(reminder, type) {
     createReminderPopup.classList.add("display");
 }
 
+function dueWorkItemButtonClick(ev) {
+    ev.stopPropagation();
+    closePopup();
+    const button = ev.target;
+    if (button.dataset.reminder) {
+        openReminderEditPopup(JSON.parse(button.dataset.reminder), "edit");
+    } else {
+        openReminderEditPopup({
+            id: null,
+            title: button.parentElement.querySelector("h3").innerText,
+            method: null,
+            due: button.parentElement.querySelector("[title*=' ']").title,
+            assessment: getAssessmentId(button.parentElement.querySelector("a").href)
+        }, "create");
+    }
+}
+
 for (const dueWorkItem of document.querySelectorAll("#component52396 li:not(:last-child) .card")) {
     const reminderButton = document.createElement("div");
     reminderButton.classList.add("reminder-button", "material-symbols-outlined");
 
     reminderButton.innerText = `notification_add`;
 
-    reminderButton.addEventListener("click", (ev) => {
-        ev.stopPropagation();
-        closePopup();
-        const button = ev.target;
-        if (button.dataset.reminder) {
-            openPopup(JSON.parse(button.dataset.reminder), "edit");
-        } else {
-            openPopup({
-                id: null,
-                title: button.parentElement.querySelector("h3").innerText,
-                method: null,
-                due: button.parentElement.querySelector("[title*=' ']").title,
-                assessment: getAssessmentId(button.parentElement.querySelector("a").href)
-            }, "create");
-        }
-    })
+    reminderButton.addEventListener("click", (ev) => {dueWorkItemButtonClick(ev)})
     dueWorkItem.appendChild(reminderButton);
 }
 
@@ -203,6 +236,7 @@ function closePopup() {
 }
 let timePicker;
 
+// Initialise the calendar
 window.onload = () => {
     timePicker = flatpickr("#rem-time", {dateFormat: timeFormat, enableTime: true, minDate: new Date(), allowInput: true});
     timePicker.calendarContainer.addEventListener("click", (ev) => {
@@ -215,7 +249,7 @@ document.querySelector("#cancel-popup").addEventListener("click", closePopup);
 document.querySelector("#create-reminder").addEventListener("click", () => {
     const data = getPopupData();
 
-    request("POST", data).then((response) => {
+    sendData("POST", data).then((response) => {
         if (response.ok && response.status === 200) {
             response.json().then((reminder) => {
                 if (reminder.assessment) {
@@ -235,7 +269,7 @@ document.querySelector("#create-reminder").addEventListener("click", () => {
 document.querySelector("#save-reminder").addEventListener("click", () => {
     const data = getPopupData();
 
-    request("PATCH", data).then((response) => {
+    sendData("PATCH", data).then((response) => {
         if (response.ok && response.status === 200) {
             response.json().then((reminder) => {
                 if (reminder.assessment) {
@@ -273,7 +307,7 @@ document.querySelector("#view-rems").addEventListener("click", (ev) => {
 document.querySelector("#add-rem").addEventListener("click", (ev) => {
     ev.stopPropagation();
     closePopup();
-    openPopup({
+    openReminderEditPopup({
         due: Date.now(),
         assessment: null,
         title: "New Reminder",
@@ -281,48 +315,8 @@ document.querySelector("#add-rem").addEventListener("click", (ev) => {
     }, "create");
 })
 
-function updateViewRemindersPopup() {
-    fetch("https://api.coolbox.lol/reminders", {method: "GET", headers: new Headers({
-        "Authorization": "Bearer " + cookie
-    })}).then(response => {response.json().then(reminders => {
-        currentReminders = reminders;
-
-        const container = viewRemindersPopup.querySelector("#view-rem-container");
-        container.innerHTML = "";
-        for (const [i, reminder] of Object.entries(reminders)) {
-            container.innerHTML += /*html*/`
-                <div class="rem-display" data-id="${i}">
-                    <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
-                    ${flatpickr.formatDate(new Date(reminder.due), timeFormat)}
-                    <div class="rem-view-edit">
-                        <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
-                        <span class="material-symbols-outlined rem-view-button rem-view-delete">delete</span>
-                    </div>
-                </div>
-            `
-            const newEl = viewRemindersPopup.querySelector(".rem-display:last-child");
-            
-            newEl.querySelector(".rem-view-delete").addEventListener("click", (ev) => {
-                const rem = currentReminders[ev.target.parentElement.parentElement.dataset.id]
-                deleteReminder(rem, () => {
-                    updateViewRemindersPopup();
-                })
-            })
-            newEl.querySelector(".rem-view-edit-b").addEventListener("click", (ev) => {
-                const rem = currentReminders[ev.target.parentElement.parentElement.dataset.id]
-                closePopup();
-                editFromViewPopup = true;
-                openPopup(rem, "edit");
-            })
-        }
-        if (reminders.length === 0) {
-            container.innerHTML = "You have no reminders";
-        }
-    })})
-}
-
 function deleteReminder(reminder, then) {
-    request("DELETE", {id: reminder.id}).then((response) => {
+    sendData("DELETE", {id: reminder.id}).then((response) => {
         if (response.ok && response.status === 200) {
             updateAlarms();
             if (reminder.assessment) {
@@ -337,12 +331,21 @@ function deleteReminder(reminder, then) {
     })
 }
 
-function request(method, body) {
+function sendData(method, body) {
     return fetch("https://api.coolbox.lol/reminders", {
         method: method,
         body: JSON.stringify(body),
         headers: headers
     })
+}
+
+function apiGet(path, callback) {
+    fetch("https://api.coolbox.lol/" + path, {
+        method: "GET",
+        headers: headers
+    }).then(response => {response.json().then(data => {
+        callback(data, response);
+    })})
 }
 
 function getPopupData() {
