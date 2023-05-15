@@ -1,10 +1,5 @@
 const isWeekend = document.querySelector("[data-timetable-container] section") === null;
 
-// If it's a weekend, fix the due work thing
-if (isWeekend) {
-    document.querySelector(".column-right").classList.add("weekend");
-}
-
 // Get rid of the old news section
 const news = document.querySelector("#component10");
 news.remove()

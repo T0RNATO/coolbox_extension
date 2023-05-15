@@ -118,22 +118,25 @@ function updateViewRemindersPopup() {
         const container = viewRemindersPopup.querySelector("#view-rem-container");
         container.innerHTML = "";
         for (const [i, reminder] of Object.entries(reminders)) {
-            container.innerHTML += /*html*/`
-                <div class="rem-display" data-id="${i}">
-                    <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
-                    ${flatpickr.formatDate(new Date(reminder.due), timeFormat)}
-                    <div class="rem-view-edit">
-                        <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
-                    </div>
+            const rem = document.createElement("div");
+            rem.classList.add("rem-display");
+            rem.dataset["id"] = i;
+
+            rem.innerHTML = /*html*/`
+                <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
+                ${flatpickr.formatDate(new Date(reminder.due), timeFormat)}
+                <div class="rem-view-edit">
+                    <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
                 </div>
             `
-            const newEl = viewRemindersPopup.querySelector(".rem-display:last-child");
+
+            container.appendChild(rem);
             
-            newEl.querySelector(".rem-view-edit-b").addEventListener("click", (ev) => {
-                const rem = currentReminders[ev.target.parentElement.parentElement.dataset.id]
+            rem.querySelector(".rem-view-edit-b").addEventListener("click", (ev) => {
+                const re = currentReminders[ev.target.parentElement.parentElement.dataset.id];
                 closePopup();
                 editFromViewPopup = true;
-                openReminderEditPopup(rem, "edit");
+                openReminderEditPopup(re, "edit");
             })
         }
         if (reminders.length === 0) {
