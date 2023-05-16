@@ -81,6 +81,10 @@ dl.tabs {
     margin-left: 20px;
 }
 
+#timeLeft:empty {
+    display: none;
+}
+
 hr {
     margin: 10px 20px 20px 20px !important;
 }
