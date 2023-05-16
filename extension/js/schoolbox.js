@@ -16,7 +16,18 @@ let inPeriod = false;
 for (const period of periods) {
     let formattedPeriod = {}
     for (let [key, time] of Object.entries(period)) {
-        const date = flatpickr.parseDate(new Date().toDateString() + " " + time, "D M d Y h:iK");
+        time = time.replace("am", ":am").replace("pm", ":pm")
+        const times = time.split(":");
+        const date = new Date();
+
+        let hours = Number(times[0]);
+        if (times[2] === "pm" && hours !== 12) {
+            hours += 12;
+        }
+        
+        date.setHours(hours)
+        date.setMinutes(Number(times[1]));
+        
         formattedPeriod[key] = date.getTime();
     }
     formattedPeriods.push(formattedPeriod);
@@ -25,8 +36,7 @@ for (const period of periods) {
 function updateTime() {
     const timeLeft = document.querySelector("#timeLeft");
 
-    // const now = Date.now();
-    const now = 1673818200000;
+    const now = Date.now();
 
     // Get the current or upcoming period
     const targetPeriod = formattedPeriods.filter((per) => {return per.from > now | per.to > now})[0];
