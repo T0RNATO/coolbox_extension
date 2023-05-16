@@ -25,6 +25,15 @@ chrome.runtime.sendMessage("getCookie", (cook) => {
     apiGet("user", (data) => {
         discordAuthenticated = data.discord.linked;
     })
+
+    apiGet("stats/message", (message) => {
+        if (message.message !== null) {
+            const urgentMessage = document.createElement("span");
+            urgentMessage.innerText = message.message;
+            urgentMessage.classList.add("message");
+            document.querySelector("#content > .row:first-of-type").appendChild(urgentMessage);
+        }
+    })
 })
 
 let editFromViewPopup = false;
