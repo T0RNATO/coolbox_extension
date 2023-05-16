@@ -337,6 +337,11 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
     document.querySelector("#delete-reminder").addEventListener("click", () => {
         deleteReminder(openReminder, () => {
             closePopup();
+            if (editFromViewPopup) {
+                editFromViewPopup = false;
+                viewRemindersPopup.classList.add("display");
+                updateViewRemindersPopup();
+            }
         })
     });
     
