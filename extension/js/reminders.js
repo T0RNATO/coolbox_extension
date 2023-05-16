@@ -1,5 +1,41 @@
-let cookie, headers, currentReminders, discordAuthenticated, createReminderPopup, viewRemindersPopup, timePicker;
-const timeFormat = "l F J Y h:iK"
+// Get the schoolbox login cookie to authenticate with coolbox
+let cookie, headers, currentReminders, discordAuthenticated;
+chrome.runtime.sendMessage("getCookie", (cook) => {
+    cookie = cook.value;
+
+    headers = new Headers({
+        "Authorization": "Bearer " + cookie,
+        "Content-Type": "application/json"
+    })
+
+    apiGet("reminders", (reminders) => {
+        currentReminders = reminders;
+        console.log(reminders);
+        for (const reminder of reminders) {
+            if (reminder.assessment) {
+                const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+                buttonElement.innerText = "notifications_active";
+                buttonElement.dataset.reminder = JSON.stringify(reminder);
+            }
+        }
+    })
+
+    document.querySelector("#auth").href = "https://api.coolbox.lol/discord/redirect?state=" + cookie;
+
+    apiGet("user", (data) => {
+        discordAuthenticated = data.discord.linked;
+    })
+
+    apiGet("stats/message", (message) => {
+        if (message.message !== null) {
+            const urgentMessage = document.createElement("span");
+            urgentMessage.innerText = message.message;
+            urgentMessage.classList.add("message");
+            document.querySelector("#content > .row:first-of-type").appendChild(urgentMessage);
+        }
+    })
+})
+
 let editFromViewPopup = false;
 let openReminder = null;
 
