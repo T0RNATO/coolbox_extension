@@ -58,55 +58,53 @@ for (const periodElement of document.querySelectorAll(".timetable th")) {
 const formattedPeriods = [];
 let inPeriod = false;
 
-// Format the extracted times into minutes since the day started
+// Format the extracted times into epochs
 for (const period of periods) {
     let formattedPeriod = {}
     for (let [key, time] of Object.entries(period)) {
-        ampm = time.slice(-2);
-        time = time.slice(0, -2);
-        hm = time.split(":");
-        if (ampm === "pm") {
-            hm[0] = Number(hm[0]) + 12;
-        }
-        formattedPeriod[key] = hm[0] * 60 + Number(hm[1])
+        const date = flatpickr.parseDate(new Date().toDateString() + " " + time, "D M d Y h:iK");
+        formattedPeriod[key] = date.getTime();
     }
     formattedPeriods.push(formattedPeriod);
 }
 
 function updateTime() {
-    // Get the current time and format it
-    const now = new Date();
-    const formattedTime = now.getHours() * 60 + now.getMinutes();
-    // Get the current or upcoming period
-    const targetPeriod = formattedPeriods.filter((per) => {return per.from > formattedTime | per.to > formattedTime})[0];
+    const timeLeft = document.querySelector("#timeLeft");
 
-    // If nonexistent, school is
+    // const now = Date.now();
+    const now = 1673818200000;
+
+    // Get the current or upcoming period
+    const targetPeriod = formattedPeriods.filter((per) => {return per.from > now | per.to > now})[0];
+
+    // If nonexistent, school is over
     if (targetPeriod === undefined) {
         document.querySelector("#timeLeft").innerHTML = "";
         inPeriod = false;
     
     // If you are currently inside a period
-    } else if (formattedPeriods.some((per) => {return formattedTime >= per.from && formattedTime < per.to})) {
-        const mins = targetPeriod.to - formattedTime
+    } else if (formattedPeriods.some((per) => {return now >= per.from && now < per.to})) {
+        const timeDiff = targetPeriod.to - now;
+        const mins = Math.ceil(timeDiff / 1000 / 60);
         // If the period has just started, update the timetable display
         if (!inPeriod) {
             updateTimetable();
         }
         // Display time left in period
         inPeriod = true;
-        document.querySelector("#timeLeft").innerHTML = `There ${mins > 1 ? "are" : "is"} <strong>${mins} minute${mins > 1 ? "s" : ""}</strong> left in the period.`
+        timeLeft.innerHTML = `There ${mins > 1 ? "are" : "is"} <strong>${mins} minute${mins > 1 ? "s" : ""}</strong> left in the period.`
 
-    // Else if you are in between periods
+    // Otherwise, you're in between periods
     } else {
-        const mins = targetPeriod.from - formattedTime;
+        const timeDiff = targetPeriod.from - now;
+        const mins = Math.ceil(timeDiff / 1000 / 60);
         // If the period has just ended, update the timetable display
         if (inPeriod) {
             updateTimetable();
         }
         // Display the time until next period
         inPeriod = false;
-        document.querySelector("#timeLeft").innerHTML = `There ${mins > 1 ? "are" : "is"} <strong>${mins} minute${mins > 1 ? "s" : ""}</strong> until your next period.`
-        
+        timeLeft.innerHTML = `There ${mins > 1 ? "are" : "is"} <strong>${mins} minute${mins > 1 ? "s" : ""}</strong> until your next period.`
     }
 }
 
