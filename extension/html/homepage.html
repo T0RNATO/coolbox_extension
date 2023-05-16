@@ -1,0 +1,73 @@
+<div>
+    <div class="grid-parent">
+        <div class="section">
+            {[data-timetable-container]}
+            <span id="timeLeft"></span>
+            <hr>
+            {#tileList-2248}
+        </div>
+        <div class="section">
+            <h2 class="subheader">Upcoming Due Work</h2>
+            <ul class="information-list due-work">
+                {#component52396 .information-list > li}
+                <li>
+                    <div class="card small-12 rem-add-container">
+                        <div class="button rem-button" id="add-rem">
+                            <span class="material-symbols-outlined align">add</span>
+                            Add Reminder
+                        </div>
+                        <div class="button rem-button" id="view-rems">
+                            <span class="material-symbols-outlined align">visibility</span>
+                            View All Reminders
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <h2 class="subheader">News</h2>
+            {#news-container-10}
+        </div>
+    </div>
+
+    <div class="popup">
+        <div class="popup-title">
+            <h1 id="create-title"><strong>Create Reminder</strong></h1>
+            <h1 id="edit-title"><strong>Edit Reminder</strong></h1>
+        </div>
+        <div class="popup-body">
+            Name:
+            <input placeholder="Reminder Name" id="rem-name" maxlength="128">
+            Time:
+            <input placeholder="Time" id="rem-time">
+            Notification Method:<br>
+            <input type="radio" id="system" value="desktop" class="plain popup-radio" name="notif-method">
+            <label for="system" class="popup-label button">System Notification</label>
+    
+            <input type="radio" id="discord" value="discord" class="plain popup-radio" name="notif-method">
+            <label for="discord" class="popup-label button">Discord Ping</label>
+    
+            <input type="radio" id="both" value="both" class="plain popup-radio" name="notif-method">
+            <label for="both" class="popup-label button">Both</label>
+    
+            <span id="discord-warning" class="notif-warning">You must <a id="auth">authenticate</a> to get notified on Discord.</span>
+            <span id="sys-warning" class="notif-warning">Note: Requires system notifications to be enabled for your browser.</span>
+    
+            <div class="popup-buttons" id="create-buttons">
+                <button class="popup-button" id="cancel-popup">Cancel</button>
+                <button class="submit popup-button" id="create-reminder">Create Reminder</button>
+            </div>
+            <div class="popup-buttons hide" id="edit-buttons">
+                <button class="submit popup-button" id="delete-reminder">Delete Reminder</button>
+                <button class="popup-button" id="save-reminder">Save Reminder</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="popupView">
+        <div class="popup-title">
+            <h1><strong>Reminders</strong></h1>
+        </div>
+        <div class="popup-body" id="view-rem-container">
+            Loading...
+        </div>
+    </div>
+</div>

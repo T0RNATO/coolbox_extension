@@ -9,11 +9,13 @@
   "content_scripts": [
     {
       "css": [
-        "css/schoolbox.css"
+        "css/homepage.css",
+        "css/flatpickr.min.css",
+        "css/font.css"
       ],
       "js": [
-        "js/schoolbox.js",
         "js/flatpickr.js",
+        "js/schoolbox.js",
         "js/reminders.js"   
       ],
       "matches": [
@@ -26,7 +28,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [ "reminder_add.png" ],
+      "resources": [ "html/homepage.html" ],
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/*"
       ]

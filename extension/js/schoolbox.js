@@ -1,51 +1,5 @@
 const isWeekend = document.querySelector("[data-timetable-container] section") === null;
 
-// Get rid of the old news section
-const news = document.querySelector("#component10");
-news.remove()
-
-// Move it to the right column
-document.querySelector(".column-right").appendChild(news)
-
-let calendarUpdated = false;
-
-// Create an observer for the calender box
-const observer = new MutationObserver((mutationList) => {
-    for (const mutation of mutationList) {
-        // When the calendar element updates, and the week has appeared
-        if (
-            mutation.type === "childList" &&
-            mutation.target.nodeName === "SPAN" &&
-            mutation.target.innerText.includes("Week") &&
-            !calendarUpdated
-            ) {
-            
-            // Extract the week number
-            const week = document.querySelector(".fc-list-event .fc-list-event-title").textContent.split("(")[0].trim();
-            
-            // And put it in the day text
-            document.querySelector("[data-timetable-header]").innerText += " (" + week + ")"
-
-            // Remove the observer
-            observer.disconnect();
-            calendarUpdated = true;
-        }
-    }
-});
-
-// Begin observing the calendar box
-observer.observe(document.querySelector("#component36739"), {attributes: true, childList: true, subtree: true});
-
-// Create an element to show the time left in the period
-let timeLeft = document.createElement("span");
-timeLeft.id = "timeLeft"
-
-// Add that element to the dom
-if (!isWeekend) {
-    document.querySelector("#content > .row:first-of-type").appendChild(timeLeft);
-    document.querySelector("#content > .row:first-of-type").appendChild(document.createElement("hr"));
-}
-
 const periods = [];
 
 // Loop through the timetable popup, and extract the times, and put them into the periods list
@@ -119,23 +73,4 @@ function updateTimetable() {
 if (!isWeekend) {
     // Update the timer every 10 seconds
     setInterval(updateTime, 10 * 1000)
-    updateTime();
-
-    const greeting = document.querySelector("#component9");
-    const timetableParent = document.querySelector("#component36911");
-
-    const divider = document.createElement("hr");
-    divider.classList.add("topHr");
-
-    timetableParent.insertBefore(divider, timetableParent.children[0]);
-    timetableParent.insertBefore(greeting, timetableParent.children[0]);
 }
-
-// EXPERIMENTAL QUICK NOTES
-// const reminders = document.createElement("div");
-// reminders.classList.add("notes_container")
-// reminders.innerHTML = `
-// <h1 class="rem_title">Quick Notes</h1>
-// <textarea class="notes"></textarea>
-// `
-// document.querySelector("#component52395 section").appendChild(reminders);
