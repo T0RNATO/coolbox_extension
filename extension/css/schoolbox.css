@@ -1,8 +1,9 @@
 .column-right {
-    position: absolute !important;
+    /* position: absolute !important;
     right: 0;
     margin-top: unset;
-    top: 80px;
+    top: 80px; */
+    margin-top: -300px;
 }
 
 #content > .row:first-of-type { width: 67%;    margin: 0;
@@ -87,7 +88,14 @@ hr {
 }
 
 .timetable td {
-    height: 1px;
+    height: 0;
+}
+
+/* firefox-exclusive css cause it goofy ahh */
+@-moz-document url-prefix() {
+    .timetable td, .timetable > tbody > tr {
+        height: 100%;
+    }
 }
 
 .timetable td > div {
@@ -95,7 +103,7 @@ hr {
 }
 
 .scrollable {
-    overflow: auto !important;
+    overflow: visible !important;
 }
 
 .timetable-subject-active > .timetable-subject {
