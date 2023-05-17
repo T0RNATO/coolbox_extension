@@ -51,6 +51,6 @@
     "default_icon": {
       "64": "icon.png"
     },
-    "default_popup": "settings.html"
+    "default_popup": "html/settings.html"
   }
 }
