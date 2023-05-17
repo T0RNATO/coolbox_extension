@@ -28,10 +28,20 @@ button {
     cursor: pointer;
 }
 
+button.hide {
+    display: none;
+}
+
 button.danger {
     background: rgb(207, 54, 54);
 }
-
 button.danger:hover {
     background: rgb(231, 86, 86);
+}
+
+button {
+    background: rgb(59, 133, 218);
+}
+button:hover {
+    background: rgb(98, 159, 230);
 }
