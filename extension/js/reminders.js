@@ -225,10 +225,8 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
 
         apiGet("stats/message", (message) => {
             if (message.message !== null) {
-                const urgentMessage = document.createElement("span");
+                const urgentMessage = document.querySelector(".message");
                 urgentMessage.innerText = message.message;
-                urgentMessage.classList.add("message");
-                document.querySelector("#content > .row:first-of-type").appendChild(urgentMessage);
             }
         })
     })
