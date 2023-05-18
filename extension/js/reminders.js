@@ -353,7 +353,6 @@ function parseTemplate(template) {
     
     // Selectorall matches {*<selector>}
     template = template.replace(/{\*(.*)}/g, (match, selector) => {
-        console.log("Matched " + match)
         let out = "";
         for (const el of document.querySelectorAll(selector)) {
             out += el.outerHTML;
@@ -363,7 +362,6 @@ function parseTemplate(template) {
 
     // Wait until element exists matches {defer <id> <selector>}
     template = template.replace(/{defer (.*?) (.*)}/g, (match, id, selector) => {
-        console.log("Matched defer " + match)
         setTimeout(() => {
             elementExistsLoop(0, selector, id);
         }, 50);
@@ -372,13 +370,11 @@ function parseTemplate(template) {
 
     // Get content of element {content <selector>}
     template = template.replace(/{content (.*)}/g, (match, selector) => {
-        console.log("Matched content " + match)
         return document.querySelector(selector).innerHTML;
     });
 
     // Normal selector matches {<selector>}
     template = template.replace(/{(.*)}/g, (match, selector) => {
-        console.log("Matched " + match)
         return document.querySelector(selector).outerHTML;
     });
 
@@ -387,11 +383,10 @@ function parseTemplate(template) {
 
 function elementExistsLoop(i, selector, id) {
     const el = document.querySelector(selector);
-    
-    // Goofy ahh hardcoding because I need to push an update
-    el.innerText = el.innerText.replace(/\(.*/g, "");
 
     if (el) {
+        // Goofy ahh hardcoding because I need to push an update
+        el.innerText = el.innerText.replace(/\(.*/g, "");
         document.getElementById(id).outerHTML = el.outerHTML;
     } else if (i < 40) {
         setTimeout(() => {
