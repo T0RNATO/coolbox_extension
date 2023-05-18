@@ -62,7 +62,7 @@ function getAssessmentId(link) {
 }
 
 function deleteReminder(reminder, then) {
-    sendData("DELETE", {id: reminder.id}).then((response) => {
+    sendData("DELETE", {id: reminder.id}, "reminders").then((response) => {
         if (response.ok && response.status === 200) {
             updateAlarms();
             if (reminder.assessment) {
@@ -77,8 +77,8 @@ function deleteReminder(reminder, then) {
     })
 }
 
-function sendData(method, body) {
-    return fetch("https://api.coolbox.lol/reminders", {
+function sendData(method, body, path) {
+    return fetch("https://api.coolbox.lol/" + path, {
         method: method,
         body: JSON.stringify(body),
         headers: headers
@@ -228,6 +228,17 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
                 urgentMessage.innerText = message.message;
             }
         })
+
+        // Temporary code for subject name logging (future name-prettifying)
+        setTimeout(() => {
+            sendData("POST", 
+                Array.from(
+                    document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")
+                ).map(el => {
+                    return {name: el.innerText}
+                }),
+            "subjects");
+        }, 1000);
         
         document.querySelector("#auth").href = "https://api.coolbox.lol/discord/redirect?state=" + cookie;
     })
@@ -235,35 +246,6 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
     document.querySelectorAll("input[name='notif-method']").forEach(input => {
         input.addEventListener("click", (event) => {updateWarnings(event.target.value)});
     })
-    
-    // let calendarUpdated = false;
-    
-    // // Create an observer for the calender box
-    // const observer = new MutationObserver((mutationList) => {
-    //     for (const mutation of mutationList) {
-    //         // When the calendar element updates, and the week has appeared
-    //         if (
-    //             mutation.type === "childList" &&
-    //             mutation.target.nodeName === "SPAN" &&
-    //             mutation.target.innerText.includes("Week") &&
-    //             !calendarUpdated
-    //             ) {
-                
-    //             // Extract the week number
-    //             const week = document.querySelector(".fc-list-event .fc-list-event-title").textContent.split("(")[0].trim();
-                
-    //             // And put it in the day text
-    //             document.querySelector("[data-timetable-header]").innerText += " (" + week + ")"
-    
-    //             // Remove the observer
-    //             observer.disconnect();
-    //             calendarUpdated = true;
-    //         }
-    //     }
-    // });
-    
-    // // Begin observing the calendar box
-    // observer.observe(document.querySelector("#component36739"), {attributes: true, childList: true, subtree: true});
     
     createReminderPopup = document.querySelector(".popup");
     viewRemindersPopup = document.querySelector(".popupView");
@@ -291,7 +273,7 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
     document.querySelector("#create-reminder").addEventListener("click", () => {
         const data = getPopupData();
     
-        sendData("POST", data).then((response) => {
+        sendData("POST", data, "reminders").then((response) => {
             if (response.ok && response.status === 200) {
                 response.json().then((reminder) => {
                     if (reminder.assessment) {
@@ -311,7 +293,7 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
     document.querySelector("#save-reminder").addEventListener("click", () => {
         const data = getPopupData();
     
-        sendData("PATCH", data).then((response) => {
+        sendData("PATCH", data, "reminders").then((response) => {
             if (response.ok && response.status === 200) {
                 response.json().then((reminder) => {
                     if (reminder.assessment) {
@@ -405,9 +387,12 @@ function parseTemplate(template) {
 
 function elementExistsLoop(i, selector, id) {
     const el = document.querySelector(selector);
+    
+    // Goofy ahh hardcoding because I need to push an update
+    el.innerText = el.innerText.replace(/\(.*/g, "");
 
     if (el) {
-        document.getElementById(id).innerHTML = el.outerHTML;
+        document.getElementById(id).outerHTML = el.outerHTML;
     } else if (i < 40) {
         setTimeout(() => {
             elementExistsLoop(i + 1, selector, id);
