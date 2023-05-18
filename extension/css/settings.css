@@ -13,6 +13,37 @@ body {
     font-size: 22px;
 }
 
+.heading {
+    font-size: 20px;
+    display: block;
+    font-weight: 600;
+}
+
+input[type='range'] {
+    appearance: none;
+    background: lightblue;
+    border-radius: 1px;
+}
+
+input[type='range']:disabled {
+    background: rgb(191, 191, 191);
+}
+
+input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: gray;
+    cursor: pointer;
+}
+
+input[type='range']::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: gray;
+    cursor: pointer;
+}
+
 .content {
     padding: 10px;
     font-family: 'Roboto Mono', monospace;
@@ -44,4 +75,8 @@ button {
 }
 button:hover {
     background: rgb(98, 159, 230);
+}
+
+#authError {
+    color: rgb(234, 101, 101);
 }

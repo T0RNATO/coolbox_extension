@@ -72,7 +72,7 @@ li.tile:nth-of-type(14) { --rotate: 312;}
 li.tile:nth-of-type(15) { --rotate: 336;}
 
 /* Hide the news tabs, calendar */
-dl.tabs, #component36739 {
+dl.tabs {
     display: none;
 }
 
@@ -209,8 +209,12 @@ dl.tabs, #component36739 {
     display: flex;
 }
 
-.popup-buttons.hide {
+.hide {
     display: none;
+}
+
+.inline {
+    display: inline;
 }
 
 #delete-reminder {

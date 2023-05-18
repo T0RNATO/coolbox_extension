@@ -1,16 +1,31 @@
 <div>
     <div class="grid-parent">
         <div class="section">
-            {[data-timetable-container]}
+            <div id="welcome">
+                <!-- Welcome message -->
+                {#component9 > div > div > h1}
+                <hr>
+            </div>
+            <!-- Timetable -->
+            <h2 class="subheader">
+                <!-- Day number -->
+                {content [data-timetable-header]}, 
+                <!-- Week number (waits until loaded) -->
+                {defer week-number tr:nth-of-type(2) span.fc-event-title}
+            </h2>
+            {[data-timetable-container] section}
             <span id="timeLeft"></span>
-            <span class="message">ohio</span>
+            <span class="message"></span>
             <hr>
+            <!-- Tiles -->
             {#tileList-2248}
         </div>
         <div class="section">
             <h2 class="subheader">Upcoming Due Work</h2>
             <ul class="information-list due-work">
-                {#component52396 .information-list > li}
+                <!-- All the due work items -->
+                {*#component52396 .information-list > li}
+                <!-- Added buttons -->
                 <li>
                     <div class="card small-12 rem-add-container">
                         <div class="button rem-button" id="add-rem">
@@ -25,6 +40,7 @@
                 </li>
             </ul>
             <h2 class="subheader">News</h2>
+            <!-- News -->
             {#news-container-10}
         </div>
     </div>

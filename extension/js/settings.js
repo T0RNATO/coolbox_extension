@@ -25,22 +25,26 @@ function link() {
 window.onload = () => {
     button = document.querySelector("#unlink");
     chrome.runtime.sendMessage("getCookie", (cook) => {
-        cookie = cook.value;
-        fetch("https://api.coolbox.lol/user", {method: "GET", headers: new Headers({
-            "Authorization": "Bearer " + cookie,
-            "Content-Type": "application/json"
-        })}).then(response => {response.json().then(data => {
-            button.classList.remove("hide");
-            if (data.discord.linked) {
-                button.classList.add("danger");
-                button.innerText = "Unlink Discord"
+        try {
+            cookie = cook.value;
+            fetch("https://api.coolbox.lol/user", {method: "GET", headers: new Headers({
+                "Authorization": "Bearer " + cookie,
+                "Content-Type": "application/json"
+            })}).then(response => {response.json().then(data => {
+                button.classList.remove("hide");
+                if (data.discord.linked) {
+                    button.classList.add("danger");
+                    button.innerText = "Unlink Discord"
 
-                button.addEventListener("click", unlink)
+                    button.addEventListener("click", unlink)
 
-            } else {
-                button.innerText = "Link Discord";
-                button.addEventListener("click", link)
-            }
-        })})
+                } else {
+                    button.innerText = "Link Discord";
+                    button.addEventListener("click", link)
+                }
+            })})
+        } catch {
+            document.querySelector("#authError").innerText = "Cannot authenticate, you \nare not logged in!";
+        }
     })
 }

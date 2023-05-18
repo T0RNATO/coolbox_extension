@@ -187,13 +187,14 @@ function dueWorkItemButtonClick(ev) {
 }
 
 fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepage => {homepage.text().then(page => {
-    document.querySelector("#content").innerHTML = page.replace(/{(.*)}/g, (match, selector) => {
-        let out = "";
-        for (const el of document.querySelectorAll(selector)) {
-            out += el.outerHTML;
-        }
-        return out;
-    });
+    document.querySelector("#content").classList.add("hide");
+
+    const content = document.createElement("div");
+    content.id = "content-new";
+    content.innerHTML = parseTemplate(page);
+
+    document.querySelector("#container").insertBefore(content, document.querySelector("#content"));
+
     updateTime();
     
     // Get the schoolbox login cookie to authenticate with coolbox
@@ -217,18 +218,18 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
             }
         })
     
-        document.querySelector("#auth").href = "https://api.coolbox.lol/discord/redirect?state=" + cookie;
-    
         apiGet("user", (data) => {
             discordAuthenticated = data.discord.linked;
         })
-
+        
         apiGet("stats/message", (message) => {
             if (message.message !== null) {
                 const urgentMessage = document.querySelector(".message");
                 urgentMessage.innerText = message.message;
             }
         })
+        
+        document.querySelector("#auth").href = "https://api.coolbox.lol/discord/redirect?state=" + cookie;
     })
     
     document.querySelectorAll("input[name='notif-method']").forEach(input => {
@@ -363,3 +364,55 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
     
     document.body.addEventListener("click", closePopup);
 })})
+
+function parseTemplate(template) {
+    // Remove comments
+    template = template.replace(/<!--.*-->/g, "");
+    
+    // Selectorall matches {*<selector>}
+    template = template.replace(/{\*(.*)}/g, (match, selector) => {
+        console.log("Matched " + match)
+        let out = "";
+        for (const el of document.querySelectorAll(selector)) {
+            out += el.outerHTML;
+        }
+        return out;
+    });
+
+    // Wait until element exists matches {defer <id> <selector>}
+    template = template.replace(/{defer (.*?) (.*)}/g, (match, id, selector) => {
+        console.log("Matched defer " + match)
+        setTimeout(() => {
+            elementExistsLoop(0, selector, id);
+        }, 50);
+        return `<div id="${id}" class="inline"></div>`;
+    });
+
+    // Get content of element {content <selector>}
+    template = template.replace(/{content (.*)}/g, (match, selector) => {
+        console.log("Matched content " + match)
+        return document.querySelector(selector).innerHTML;
+    });
+
+    // Normal selector matches {<selector>}
+    template = template.replace(/{(.*)}/g, (match, selector) => {
+        console.log("Matched " + match)
+        return document.querySelector(selector).outerHTML;
+    });
+
+    return template;
+}
+
+function elementExistsLoop(i, selector, id) {
+    const el = document.querySelector(selector);
+
+    if (el) {
+        document.getElementById(id).innerHTML = el.outerHTML;
+    } else if (i < 40) {
+        setTimeout(() => {
+            elementExistsLoop(i + 1, selector, id);
+        }, 50);
+    } else {
+        console.warn(`Deferred template element of id ${id} did not load in 2 seconds`);
+    }
+}
