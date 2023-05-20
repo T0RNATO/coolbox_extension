@@ -1,5 +1,5 @@
 <head>
-    <script src="/js/settings.js"></script>
+    <script src="/js/settings.js" defer></script>
     <link rel="stylesheet" href="/css/settings.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,7 +10,7 @@
     <div class="content">
         <span class="heading">Settings</span>
         Tiles RGB Speed:
-        <input type="range" min="1" max="100" value="0" disabled>
+        <input type="range" min="1" max="100" value="0" id="rgb" disabled>
         <span class="heading">Authentication:</span>
         <button class="hide" id="unlink"></button>
         <span id="authError"></span>

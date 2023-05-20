@@ -40,7 +40,8 @@
   "permissions": [
     "cookies",
     "alarms",
-    "notifications"
+    "notifications",
+    "storage"
   ],
   "browser_specific_settings": {
     "gecko": {

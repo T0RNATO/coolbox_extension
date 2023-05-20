@@ -195,7 +195,9 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
 
     document.querySelector("#container").insertBefore(content, document.querySelector("#content"));
 
-    updateTime();
+    if (!isWeekend) {
+        updateTime();
+    }
     
     // Get the schoolbox login cookie to authenticate with coolbox
     chrome.runtime.sendMessage("getCookie", (cook) => {
@@ -350,14 +352,42 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
 function parseTemplate(template) {
     // Remove comments
     template = template.replace(/<!--.*-->/g, "");
-    
-    // Selectorall matches {*<selector>}
-    template = template.replace(/{\*(.*)}/g, (match, selector) => {
-        let out = "";
-        for (const el of document.querySelectorAll(selector)) {
-            out += el.outerHTML;
+
+    // If-blocks match {if <condition>; <html>}
+    // Note: Closing brackets } must be alone on the line
+    template = template.replace(/{if ([\s\S]+); *([\s\S]+)^(\s*})/gm, (match, condition, html) => {
+        // Eval is understandably blocked in extensions 😥
+
+        // try {
+        //     if (eval(condition)) {
+        //         return html;
+        //     } else {
+        //         return "";
+        //     }
+        // } catch (err) {
+        //     console.warn(`Template condition ${condition} is not valid javascript, with error:`);
+        //     console.warn(err);
+        //     return "";
+        // }
+
+        if (condition === "!isWeekend" && !isWeekend) {
+            return html;
+        } else {
+            return "";
         }
-        return out;
+    });
+    
+    // Selectorall matches {elements <selector>}
+    template = template.replace(/{elements (.*)}/g, (match, selector) => {
+        let out = "";
+        const elements = document.querySelectorAll(selector);
+        if (elements) {
+            for (const el of elements) {
+                out += el.outerHTML;
+            }
+            return out;
+        }
+        return "";
     });
 
     // Wait until element exists matches {defer <id> <selector>}
@@ -370,12 +400,20 @@ function parseTemplate(template) {
 
     // Get content of element {content <selector>}
     template = template.replace(/{content (.*)}/g, (match, selector) => {
-        return document.querySelector(selector).innerHTML;
+        const el = document.querySelector(selector);
+        if (el) {
+            return el.innerHTML;
+        }
+        return "";
     });
 
-    // Normal selector matches {<selector>}
-    template = template.replace(/{(.*)}/g, (match, selector) => {
-        return document.querySelector(selector).outerHTML;
+    // Normal selector matches {element <selector>}
+    template = template.replace(/{element (.*)}/g, (match, selector) => {
+        const el = document.querySelector(selector);
+        if (el) {
+            return el.outerHTML;
+        }
+        return "";
     });
 
     return template;

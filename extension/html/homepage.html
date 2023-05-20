@@ -3,28 +3,32 @@
         <div class="section">
             <div id="welcome">
                 <!-- Welcome message -->
-                {#component9 > div > div > h1}
+                {element #component9 > div > div > h1}
                 <hr>
             </div>
             <!-- Timetable -->
-            <h2 class="subheader">
-                <!-- Day number -->
-                {content [data-timetable-header]}, 
-                <!-- Week number (waits until loaded) -->
-                {defer week-number tr:nth-of-type(2) span.fc-event-title}
-            </h2>
-            {[data-timetable-container] section}
-            <span id="timeLeft"></span>
-            <span class="message"></span>
-            <hr>
+            
+            <!-- isWeekend is a hard-coded condition 😔 -->
+            {if !isWeekend;
+                <h2 class="subheader">
+                    <!-- Day number -->
+                    {content [data-timetable-header]}, 
+                    <!-- Week number (waits until loaded) -->
+                    {defer week-number tr:nth-of-type(2) span.fc-event-title}
+                </h2>
+                {element [data-timetable-container] section}
+                <span id="timeLeft"></span>
+                <span class="message"></span>
+                <hr>
+            }
             <!-- Tiles -->
-            {#tileList-2248}
+            {element #tileList-2248}
         </div>
         <div class="section">
             <h2 class="subheader">Upcoming Due Work</h2>
             <ul class="information-list due-work">
                 <!-- All the due work items -->
-                {*#component52396 .information-list > li}
+                {elements #component52396 .information-list > li}
                 <!-- Added buttons -->
                 <li>
                     <div class="card small-12 rem-add-container">
@@ -41,7 +45,7 @@
             </ul>
             <h2 class="subheader">News</h2>
             <!-- News -->
-            {#news-container-10}
+            {element #news-container-10}
         </div>
     </div>
 
