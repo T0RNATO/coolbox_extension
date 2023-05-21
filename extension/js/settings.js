@@ -1,6 +1,7 @@
 let cookie;
 
-const input = document.querySelector("#rgb");
+const rgbInput = document.querySelector("#rgb");
+const pfpSwitch = document.querySelector("#pfp");
 
 function unlink() {
     fetch("https://api.coolbox.lol/discord", {method: "DELETE", headers: new Headers({
@@ -48,12 +49,19 @@ chrome.runtime.sendMessage("getCookie", (cook) => {
     }
 })
 
-input.addEventListener("mouseup", () => {
+rgbInput.addEventListener("mouseup", () => {
     chrome.storage.sync.set({
-        rgb_speed: Number(input.value)
+        rgb_speed: Number(rgbInput.value)
     })
 })
 
-chrome.storage.sync.get(["rgb_speed"]).then((result) => {
-    input.value = result.rgb_speed;
+pfpSwitch.addEventListener("click", () => {
+    chrome.storage.sync.set({
+        pfp: pfpSwitch.checked
+    })
+})
+
+chrome.storage.sync.get(["rgb_speed", "pfp"]).then((result) => {
+    rgbInput.value = result.rgb_speed;
+    pfpSwitch.checked = result.pfp;
 });

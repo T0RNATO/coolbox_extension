@@ -80,3 +80,41 @@ button:hover {
 #authError {
     color: rgb(234, 101, 101);
 }
+
+input[type='checkbox'] {
+    background: gray;
+    width: 30px;
+    border-radius: 2px;
+    height: 15px;
+    appearance: none;
+    position: relative;
+    transition: 0.2s;
+}
+
+input[type='checkbox']:checked {
+    background-color: limegreen;
+}
+
+input[type='checkbox']::after {
+    background: white;
+    width: 50%;
+    height: 100%;
+    content: "";
+    position: absolute;
+    transition: 0.2s;
+    left: 0;
+    filter: drop-shadow(0 0 3px gray);
+}
+  
+input[type='checkbox']:checked::after {
+    left: 50%;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.settings-label {
+    margin-right: 10px;
+}

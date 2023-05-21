@@ -251,3 +251,7 @@ dl.tabs {
     color: red;
     display: none;
 }
+
+.hidePfp {
+    right: 4.5em !important;
+}

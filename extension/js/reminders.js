@@ -1,9 +1,26 @@
 // Get the schoolbox login cookie to authenticate with coolbox
-let cookie, headers, currentReminders, discordAuthenticated, createReminderPopup, viewRemindersPopup;
+let cookie, headers, currentReminders, discordAuthenticated, createReminderPopup, viewRemindersPopup, rgbCount, tiles, rows, rgbInterval;
 const timeFormat = "l F J Y h:iK"
 
 let editFromViewPopup = false;
 let openReminder = null;
+
+const range = n => [...Array(n).keys()]
+
+let rgbValue = 0;
+
+function rgbTiles() {
+    rgbValue -= 3;
+    rgbCount = 0;
+    try {
+      for (const i of range(rows)) {
+          for (const j of range(5)) {
+              tiles[rgbCount].style.setProperty('--rotate', rgbValue + (i + j) * 20)
+              rgbCount += 1;
+          }
+      }
+    } catch {}
+}
 
 function updateAlarms() {
     chrome.runtime.sendMessage("createAlarms");
@@ -347,7 +364,33 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
     })
     
     document.body.addEventListener("click", closePopup);
+
+    tiles = document.querySelectorAll('li.tile');
+    rows = tiles.length / 5;
+
+    chrome.storage.sync.get(["rgb_speed", "pfp"]).then((result) => {
+        if (result.rgb_speed - 1) {
+            startRgbTiles(result.rgb_speed);
+        }
+        if (result.pfp) {
+            document.querySelector("#search").classList.add("hidePfp");
+            document.querySelector("#profile-drop").remove();
+        }
+    });
 })})
+
+function startRgbTiles(speed) {
+    clearInterval(rgbInterval);
+
+    if (speed !== 1) {
+        rgbInterval = setInterval(rgbTiles, 200 - speed - 1);
+        rgbTiles();
+    } else {
+        for (const tile of tiles) {
+            tile.style.setProperty("--rotate", null);
+        }
+    }
+}
 
 function parseTemplate(template) {
     // Remove comments
@@ -434,3 +477,5 @@ function elementExistsLoop(i, selector, id) {
         console.warn(`Deferred template element of id ${id} did not load in 2 seconds`);
     }
 }
+
+chrome.storage.onChanged.addListener((changes) => {startRgbTiles(changes.rgb_speed.newValue)})

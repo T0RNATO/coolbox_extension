@@ -9,8 +9,20 @@
     <div class="title">CoolBox Settings</div>
     <div class="content">
         <span class="heading">Settings</span>
-        Tiles RGB Speed:
-        <input type="range" min="1" max="100" value="0" id="rgb" disabled>
+        
+        <div class="flex">
+            <span class="settings-label">
+                Tiles RGB Speed: 
+            </span>
+            <input type="range" min="1" max="200" value="0" id="rgb"><br>
+        </div>
+        <div class="flex">
+            <span class="settings-label">
+                Hide Profile Picture: 
+            </span>
+            <input type="checkbox" id="pfp">
+        </div>
+
         <span class="heading">Authentication:</span>
         <button class="hide" id="unlink"></button>
         <span id="authError"></span>
