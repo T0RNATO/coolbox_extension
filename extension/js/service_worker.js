@@ -31,7 +31,8 @@ chrome.alarms.onAlarm.addListener((alarm) => {
             title: reminder.title,
             requireInteraction: true,
             message: "You have a notification for " + reminder.title,
-            type: "basic"
+            type: "basic",
+            priority: 2
         }
 
         // (Firefox doesn't support a bunch of stuff)

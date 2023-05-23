@@ -203,6 +203,9 @@ dl.tabs {
 .rem-button {
     flex: 1;
     margin: 3px !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
 }
 
 .rem-add-container {

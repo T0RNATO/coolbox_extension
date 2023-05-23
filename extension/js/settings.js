@@ -49,7 +49,7 @@ chrome.runtime.sendMessage("getCookie", (cook) => {
     }
 })
 
-rgbInput.addEventListener("mouseup", () => {
+rgbInput.addEventListener("change", () => {
     chrome.storage.sync.set({
         rgb_speed: Number(rgbInput.value)
     })

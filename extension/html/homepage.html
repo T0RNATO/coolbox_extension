@@ -13,8 +13,8 @@
                 <h2 class="subheader">
                     <!-- Day number -->
                     {content [data-timetable-header]}, 
-                    <!-- Week number (waits until loaded) -->
-                    {defer week-number tr:nth-of-type(2) span.fc-event-title}
+                    <!-- Week number (waits until loaded) (impossible to target accurately with css selector, hardcoded in js) -->
+                    {defer week-number $week-number}
                 </h2>
                 {element [data-timetable-container] section}
                 <span id="timeLeft"></span>
@@ -33,12 +33,16 @@
                 <li>
                     <div class="card small-12 rem-add-container">
                         <div class="button rem-button" id="add-rem">
-                            <span class="material-symbols-outlined align">add</span>
-                            Add Reminder
+                            <div>
+                                <span class="material-symbols-outlined align">add</span>
+                                Add Reminder
+                            </div>
                         </div>
                         <div class="button rem-button" id="view-rems">
-                            <span class="material-symbols-outlined align">visibility</span>
-                            View All Reminders
+                            <div>
+                                <span class="material-symbols-outlined align">visibility</span>
+                                View All Reminders
+                            </div>
                         </div>
                     </div>
                 </li>

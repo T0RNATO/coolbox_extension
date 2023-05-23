@@ -1,4 +1,3 @@
-// Get the schoolbox login cookie to authenticate with coolbox
 let cookie, headers, currentReminders, discordAuthenticated, createReminderPopup, viewRemindersPopup, rgbCount, tiles, rows, rgbInterval;
 const timeFormat = "l F J Y h:iK"
 
@@ -248,16 +247,19 @@ fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepag
             }
         })
 
-        // Temporary code for subject name logging (future name-prettifying)
-        setTimeout(() => {
-            sendData("POST", 
-                Array.from(
-                    document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")
-                ).map(el => {
-                    return {name: el.innerText}
-                }),
-            "subjects");
-        }, 1000);
+        sendData("POST", 
+            Array.from(
+                document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")
+            ).map(el => {
+                return {name: el.innerText}
+            }),
+        "subjects").then((response) => {response.json().then((json) => {
+            for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
+                subject.innerText = json.filter(sub => {return sub.name === subject.nextElementSibling.innerText.replace(/\(|\)/g, "")})[0].pretty;
+            }
+        })});
+
+        
         
         document.querySelector("#auth").href = "https://api.coolbox.lol/discord/redirect?state=" + cookie;
     })
@@ -399,20 +401,7 @@ function parseTemplate(template) {
     // If-blocks match {if <condition>; <html>}
     // Note: Closing brackets } must be alone on the line
     template = template.replace(/{if ([\s\S]+); *([\s\S]+)^(\s*})/gm, (match, condition, html) => {
-        // Eval is understandably blocked in extensions 😥
-
-        // try {
-        //     if (eval(condition)) {
-        //         return html;
-        //     } else {
-        //         return "";
-        //     }
-        // } catch (err) {
-        //     console.warn(`Template condition ${condition} is not valid javascript, with error:`);
-        //     console.warn(err);
-        //     return "";
-        // }
-
+        // Eval is understandably blocked in extensions 😥, so I hardcoded it 😔
         if (condition === "!isWeekend" && !isWeekend) {
             return html;
         } else {
@@ -463,11 +452,21 @@ function parseTemplate(template) {
 }
 
 function elementExistsLoop(i, selector, id) {
-    const el = document.querySelector(selector);
+    let el;
+    if (selector === "$week-number") {
+        // Goofy hardcoding, dw bout it
+        el = Array.from(document.querySelectorAll(".fc-event-title")).filter((e) => {
+            return e.innerText.startsWith("Week ");
+        })[0]
+    } else {
+        el = document.querySelector(selector);
+    }
 
     if (el) {
-        // Goofy ahh hardcoding because I need to push an update
-        el.innerText = el.innerText.replace(/\(.*/g, "");
+        // More goofy hardcoding
+        if (selector === "$week-number") {
+            el.innerText = el.innerText.replace(/\(.*/g, "");
+        }
         document.getElementById(id).outerHTML = el.outerHTML;
     } else if (i < 40) {
         setTimeout(() => {
