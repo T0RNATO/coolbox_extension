@@ -1,5 +1,3 @@
-const isWeekend = document.querySelector("[data-timetable-container] section") === null;
-
 const periods = [];
 
 // Loop through the timetable popup, and extract the times, and put them into the periods list
@@ -82,5 +80,29 @@ function updateTimetable() {
 
 if (!isWeekend) {
     // Update the timer every 10 seconds
-    setInterval(updateTime, 10 * 1000)
+    setInterval(updateTime, 10 * 1000);
+    updateTime();
 }
+
+apiGet("user", (data) => {
+    discordAuthenticated = data.discord.linked;
+})
+
+apiGet("stats/message", (message) => {
+    if (message.message !== null) {
+        const urgentMessage = document.querySelector(".message");
+        urgentMessage.innerText = message.message;
+    }
+})
+
+sendData("POST", 
+    Array.from(
+        document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")
+    ).map(el => {
+        return {name: el.innerText}
+    }),
+"subjects").then((response) => {response.json().then((json) => {
+    for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
+        subject.innerText = json.filter(sub => {return sub.name === subject.nextElementSibling.innerText.replace(/\(|\)/g, "")})[0].pretty;
+    }
+})});

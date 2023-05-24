@@ -1,24 +1,45 @@
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if (request === "getCookie") {
-            chrome.cookies.get({"url": "https://schoolbox.donvale.vic.edu.au/", "name": "PHPSESSID"}, (cookies) => {
-                sendResponse(cookies);
-            });
-            return true;
-        } else if (request === "createAlarms") {
-            createAlarms();
-        }
-    }
-);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // Ensure that only this extension can interact with this service worker
+    if (sender.id === chrome.runtime.id) {
+        switch(request) {
+            // Getting schoolbox session id
+            case "getCookie":
+                // Return the token
+                chrome.cookies.get({"url": "https://schoolbox.donvale.vic.edu.au/", "name": "PHPSESSID"}, (cookies) => {
+                    sendResponse(cookies);
+                });
+                return true;
 
+            // Creating notification timers
+            case "createAlarms":
+                createAlarms();
+                break;
+            // Call schoolbox scripts after page reconstruction
+            case "pageLoaded":
+                chrome.scripting.executeScript({
+                    files: [
+                        "js/pageStart/reminders.js",
+                        "js/pageStart/schoolbox.js",
+                        "js/pageStart/userSettings.js"
+                    ],
+                    target: {
+                        tabId: sender.tab.id
+                    }
+                })
+        }
+    }  
+});
+
+// Essentially a setInterval for checking for notifications
 chrome.alarms.create("cb-notification-loop", {periodInMinutes: 15, delayInMinutes: 0})
 
 chrome.alarms.onAlarm.addListener((alarm) => {
     console.info(alarm);
+    // If it's just the notif loop, delete all alarms and recreate them (in case the user has updated them)
     if (alarm.name === "cb-notification-loop") {
         createAlarms();
 
-      // A notification alarm
+    // If it's an actual notification, send a desktop notification
     } else if (alarm.name.startsWith("cba-")) {
         let reminder = JSON.parse(alarm.name.split("-")[1])
         console.debug("Alarm Triggered", reminder);
@@ -77,6 +98,7 @@ function createAlarms() {
         if (response.ok && response.status === 200) {
             // Remove all the alarms to remake them in case reminders have been deleted/edited
             chrome.alarms.clearAll();
+            
             for (const rem of reminders) {
                 // If the reminder needs a desktop notification, create it in case we lose access to the token before next loop
                 if (rem.method === "desktop" || rem.method === "both") {

@@ -14,9 +14,10 @@
         "css/font.css"
       ],
       "js": [
-        "js/flatpickr.js",
-        "js/schoolbox.js",
-        "js/reminders.js"   
+        "js/pageLoad/parseTemplate.js",
+        "js/pageLoad/createHomepage.js",
+        "js/pageLoad/flatpickr.js",
+        "js/pageLoad/utilFunctions.js"
       ],
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/"
@@ -41,7 +42,8 @@
     "cookies",
     "alarms",
     "notifications",
-    "storage"
+    "storage",
+    "scripting"
   ],
   "browser_specific_settings": {
     "gecko": {
