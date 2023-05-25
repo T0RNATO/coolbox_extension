@@ -1,7 +1,4 @@
-let currentReminders, discordAuthenticated, createReminderPopup, viewRemindersPopup;
-
-let editFromViewPopup = false;
-let openReminder = null;
+let createReminderPopup, viewRemindersPopup;
 
 apiGet("reminders", (reminders) => {
     currentReminders = reminders;
@@ -37,7 +34,7 @@ for (const dueWorkItem of document.querySelectorAll(".due-work > li:not(:last-ch
 }
 
 // Initialise the calendar
-timePicker = flatpickr("#rem-time", {dateFormat: timeFormat, enableTime: true, minDate: new Date(), allowInput: true});
+let timePicker = flatpickr("#rem-time", {dateFormat: timeFormat, enableTime: true, minDate: new Date(), allowInput: true});
 timePicker.calendarContainer.addEventListener("click", (ev) => {
     ev.stopPropagation();
 })

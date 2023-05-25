@@ -57,6 +57,7 @@ button {
     border: none;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
+    background: rgb(59, 133, 218);
 }
 
 button.hide {
@@ -70,9 +71,6 @@ button.danger:hover {
     background: rgb(231, 86, 86);
 }
 
-button {
-    background: rgb(59, 133, 218);
-}
 button:hover {
     background: rgb(98, 159, 230);
 }

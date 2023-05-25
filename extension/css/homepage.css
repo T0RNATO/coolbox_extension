@@ -100,10 +100,6 @@ dl.tabs {
     width: 48% !important;
 }
 
-#timeLeft:empty {
-    display: none;
-}
-
 .timetable-subject {
     min-height: 95px !important;
     height: 100% !important;
@@ -155,13 +151,12 @@ dl.tabs {
 .popup, .popupView {
     display: none;
     position: fixed;
-    background: var(--body-background);
+    background: white;
     width: 600px;
     height: 480px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
     filter: drop-shadow(2px 4px 6px gray);
 }
 

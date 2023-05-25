@@ -1,6 +1,10 @@
 const range = n => [...Array(n).keys()]
 const timeFormat = "l F J Y h:iK"
 
+let currentReminders;
+let editFromViewPopup = false;
+let openReminder = null;
+
 function updateAlarms() {
     chrome.runtime.sendMessage("createAlarms");
 }

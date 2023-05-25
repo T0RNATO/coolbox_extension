@@ -1,5 +1,7 @@
 const periods = [];
 
+let discordAuthenticated;
+
 // Loop through the timetable popup, and extract the times, and put them into the periods list
 for (const periodElement of document.querySelectorAll(".timetable th")) {
     const range = periodElement.querySelector("time").textContent;
@@ -14,7 +16,6 @@ let inPeriod = false;
 for (const period of periods) {
     let formattedPeriod = {}
     for (let [key, time] of Object.entries(period)) {
-        time = time.replace("am", ":am").replace("pm", ":pm")
         const times = time.split(":");
         const date = new Date();
 
@@ -107,7 +108,7 @@ apiGet("stats/message", (message) => {
 function prettifySubjectNames(names) {
     for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
         subject.innerText = names.filter(sub => {
-            return sub.name.toLowerCase() === subject.nextElementSibling.innerText.replace(/\(|\)/g, "").toLowerCase();
+            return sub.name.toLowerCase() === subject.nextElementSibling.innerText.replace(/[\(\)]/g, "").toLowerCase();
         })[0].pretty;
     }
 }
