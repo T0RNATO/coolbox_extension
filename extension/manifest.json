@@ -22,6 +22,14 @@
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/"
       ]
+    },
+    {
+      "js": [
+        "js/timetable.js"
+      ],
+      "matches": [
+        "https://schoolbox.donvale.vic.edu.au/timetable"
+      ]
     }
   ],
   "host_permissions": [

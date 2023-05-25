@@ -75,6 +75,10 @@ const c = new DOMParser();
 function updateTimetable() {
     fetch(location.href).then(data => {data.text().then(e => {
         document.querySelector("[data-timetable-container] section").replaceWith(c.parseFromString(e, "text/html").querySelector("[data-timetable-container] section"));
+        chrome.storage.local.get(["subjects"]).then((subjects) => {
+            console.log(subjects, subjects.subjects.subjects);
+            prettifySubjectNames(subjects.subjects.subjects);
+        })
     })})
 }
 
@@ -103,7 +107,7 @@ apiGet("stats/message", (message) => {
 function prettifySubjectNames(names) {
     for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
         subject.innerText = names.filter(sub => {
-            return sub.name === subject.nextElementSibling.innerText.replace(/\(|\)/g, "");
+            return sub.name.toLowerCase() === subject.nextElementSibling.innerText.replace(/\(|\)/g, "").toLowerCase();
         })[0].pretty;
     }
 }
