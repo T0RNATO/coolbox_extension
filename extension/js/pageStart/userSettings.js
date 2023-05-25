@@ -11,7 +11,12 @@ function startRgbTiles(speed) {
     }
 }
 
-chrome.storage.onChanged.addListener((changes) => {startRgbTiles(changes.rgb_speed.newValue)})
+chrome.storage.onChanged.addListener((changes) => {
+    // Check if change is relevant
+    if (changes.rgbValue) {
+        startRgbTiles(changes.rgb_speed.newValue);
+    }
+})
 
 let rgbValue = 0;
 let rgbInterval, rgbCount;

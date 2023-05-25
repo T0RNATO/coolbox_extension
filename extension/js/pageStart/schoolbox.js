@@ -95,14 +95,40 @@ apiGet("stats/message", (message) => {
     }
 })
 
-sendData("POST", 
-    Array.from(
-        document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")
-    ).map(el => {
-        return {name: el.innerText}
-    }),
-"subjects").then((response) => {response.json().then((json) => {
+/**
+ * @param {Object[]} names
+ * @param {string} names[].name - The unprettified name
+ * @param {string} names[].pretty - The prettified name
+*/
+function prettifySubjectNames(names) {
     for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
-        subject.innerText = json.filter(sub => {return sub.name === subject.nextElementSibling.innerText.replace(/\(|\)/g, "")})[0].pretty;
+        subject.innerText = names.filter(sub => {
+            return sub.name === subject.nextElementSibling.innerText.replace(/\(|\)/g, "");
+        })[0].pretty;
     }
-})});
+}
+
+chrome.storage.local.get(["subjects"]).then((subjects) => {
+    // Don't even worry about this line of code
+    subjects = subjects.subjects;
+
+    // If subject names have been saved, and that save has been updated in the last day
+    if (subjects.updated && Date.now() - subjects.updated < 86400000) {
+        prettifySubjectNames(subjects.subjects);
+    } else {
+        const unprettifiedNames = Array.from(
+            document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")
+        ).map(el => {return {name: el.innerText}})
+
+        // Fetch pretty names from API
+        sendData("POST", unprettifiedNames, "subjects").then((response) => {response.json().then((json) => {
+            // Update DOM
+            prettifySubjectNames(json);
+            // Cache results to reduce API load
+            chrome.storage.local.set({subjects: {
+                updated: Date.now(),
+                subjects: json
+            }})
+        })});
+    }
+})
