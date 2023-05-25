@@ -108,7 +108,7 @@ apiGet("stats/message", (message) => {
 function prettifySubjectNames(names) {
     for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
         subject.innerText = names.filter(sub => {
-            return sub.name.toLowerCase() === subject.nextElementSibling.innerText.replace(/[\(\)]/g, "").toLowerCase();
+            return sub.name.toLowerCase() === subject.nextElementSibling.innerText.replace(/[()]/g, "").toLowerCase();
         })[0].pretty;
     }
 }
