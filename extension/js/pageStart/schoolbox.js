@@ -16,7 +16,7 @@ let inPeriod = false;
 for (const period of periods) {
     let formattedPeriod = {}
     for (let [key, time] of Object.entries(period)) {
-        const times = time.split(":");
+        const times = time.replace("am", ":am").replace("pm", ":pm").split(":");
         const date = new Date();
 
         let hours = Number(times[0]);
