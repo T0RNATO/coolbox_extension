@@ -132,8 +132,10 @@ chrome.storage.local.get(["subjects"]).then((subjects) => {
     // Don't even worry about this line of code
     subjects = subjects.subjects;
 
+    console.log(subjects.subjects)
+
     // If subject names have been saved, and that save has been updated in the last day
-    if (subjects.updated && Date.now() - subjects.updated < 86400000) {
+    if (subjects && subjects.updated && Date.now() - subjects.updated < 86400000) {
         prettifySubjectNames(subjects.subjects);
     } else {
         const unprettifiedNames = Array.from(
