@@ -13,7 +13,7 @@ function startRgbTiles(speed) {
 
 chrome.storage.onChanged.addListener((changes) => {
     // Check if change is relevant
-    if (changes.rgbValue) {
+    if (changes.rgb_speed) {
         startRgbTiles(changes.rgb_speed.newValue);
     }
 })

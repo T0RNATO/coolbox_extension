@@ -77,7 +77,6 @@ function updateTimetable() {
     fetch(location.href).then(data => {data.text().then(e => {
         document.querySelector("[data-timetable-container] section").replaceWith(c.parseFromString(e, "text/html").querySelector("[data-timetable-container] section"));
         chrome.storage.local.get(["subjects"]).then((subjects) => {
-            console.log(subjects, subjects.subjects.subjects);
             prettifySubjectNames(subjects.subjects.subjects);
         })
     })})
@@ -108,14 +107,23 @@ apiGet("stats/message", (message) => {
 function prettifySubjectNames(names) {
     for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
         try {
-            const prettySubject = names.find(sub => sub.name.toLowerCase() === subject.nextElementSibling.innerText.toLowerCase());
+            const unprettySubject = subject.nextElementSibling.innerText;
+            const prettySubject = names.find(sub => sub.name.toLowerCase() === unprettySubject.replace(/[()]/g, "").toLowerCase());
             if (prettySubject !== undefined) {
                 subject.innerText = prettySubject.pretty;
             } else {
-                console.log(`No pretty subject found for ${subject.innerText}`);
+                console.log(`No pretty subject found for ${unprettySubject}`);
             }
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    for (const dueWorkItem of document.querySelectorAll(".due-work .meta a")) {
+        const unprettySubject = dueWorkItem.innerText;
+        const prettySubject = names.find(sub => sub.name.toLowerCase() === unprettySubject.replace(/\)|(.*\()/g, "").toLowerCase());
+        if (prettySubject !== undefined) {
+            dueWorkItem.innerText = prettySubject.pretty;
         }
     }
 }
