@@ -108,7 +108,7 @@ apiGet("stats/message", (message) => {
 function prettifySubjectNames(names) {
     for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
         try {
-            const prettySubject = names.find(sub => sub.name.toLowerCase() === subject.innerText.toLowerCase());
+            const prettySubject = names.find(sub => sub.name.toLowerCase() === subject.nextElementSibling.innerText.toLowerCase());
             if (prettySubject !== undefined) {
                 subject.innerText = prettySubject.pretty;
             } else {
@@ -143,4 +143,6 @@ chrome.storage.local.get(["subjects"]).then((subjects) => {
             }})
         })});
     }
-})
+}).catch((error) => {
+    console.error(error);
+});
