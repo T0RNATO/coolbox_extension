@@ -61,37 +61,66 @@ function getAssessmentId(link) {
     return Number(sections[sections.length - 2]);
 }
 
-function deleteReminder(reminder, then) {
-    sendData("DELETE", {id: reminder.id}, "reminders").then((response) => {
-        if (response.ok && response.status === 200) {
-            updateAlarms();
-            if (reminder.assessment) {
-                const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
-                delete buttonElement.dataset.reminder;
-                buttonElement.innerText = "notification_add";
-            }
-        } else {
-            alert("Reminder Deletion Failed")
+function deleteReminder(reminder, callback) {
+    apiSend("DELETE", {id: reminder.id}, "reminders", (data) => {
+        updateAlarms();
+        if (reminder.assessment) {
+            const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+            delete buttonElement.dataset.reminder;
+            buttonElement.innerText = "notification_add";
         }
-        then();
+        if (callback) {
+            callback();
+        }
+    }, (response) => {
+        alert("Reminder deletion failed.");
+        console.error("Reminder deletion failed with response code " + response.status);
     })
 }
 
-function sendData(method, body, path) {
-    return fetch("https://api.coolbox.lol/" + path, {
-        method: method,
-        body: JSON.stringify(body),
-        headers: headers
-    })
+function apiError(response, error, errorCallback) {
+    console.error(`Failed to access https://api.coolbox.lol/${path}, with code ${response.status}.`);
+    console.error(error);
+    if (errorCallback) {
+        errorCallback(response, error)
+    }
 }
 
-function apiGet(path, callback) {
-    fetch("https://api.coolbox.lol/" + path, {
-        method: "GET",
-        headers: headers
-    }).then(response => {response.json().then(data => {
-        callback(data, response);
-    })})
+function apiSend(method, body, path, callback, errorCallback) {
+    try {
+        fetch("https://api.coolbox.lol/" + path, {
+            method: method,
+            body: JSON.stringify(body),
+            headers: headers
+        }).then(response => {response.json().then(data => {
+            if (response.status === 200) {
+                if (callback) {
+                    callback(data, response);
+                } else {
+                    apiError(response, error, errorCallback);
+                }
+            }
+        })})
+    } catch (error) {
+        apiError(response, error, errorCallback);
+    }
+}
+
+function apiGet(path, callback, errorCallback) {
+    try {
+        fetch("https://api.coolbox.lol/" + path, {
+            method: "GET",
+            headers: headers
+        }).then(response => {response.json().then(data => {
+            if (response.status === 200) {
+                callback(data, response);
+            } else {
+                apiError(response, error, errorCallback);
+            }
+        })})
+    } catch (error) {
+        apiError(response, error, errorCallback);
+    }
 }
 
 function getPopupData() {

@@ -132,7 +132,7 @@ dl.tabs {
     position: absolute;
     width: 20px;
     aspect-ratio: 1/1;
-    right: 8px;
+    right: 10px;
     top: 5px;
     cursor: pointer;
     color: gray;

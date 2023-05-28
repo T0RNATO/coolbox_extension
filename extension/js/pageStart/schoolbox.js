@@ -133,7 +133,7 @@ chrome.storage.local.get(["subjects"]).then((subjects) => {
         ).map(el => {return {name: el.innerText}})
 
         // Fetch pretty names from API
-        sendData("POST", unprettifiedNames, "subjects").then((response) => {response.json().then((json) => {
+        apiSend("POST", unprettifiedNames, "subjects", (json) => {
             // Update DOM
             prettifySubjectNames(json);
             // Cache results to reduce API load
@@ -141,6 +141,8 @@ chrome.storage.local.get(["subjects"]).then((subjects) => {
                 updated: Date.now(),
                 subjects: json
             }})
-        })});
+        }, (response) => {
+            console.error("Failed to fetch pretty subject names from api with response code " + response.status);
+        })
     }
 })

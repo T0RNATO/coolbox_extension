@@ -44,45 +44,39 @@ document.querySelector("#cancel-popup").addEventListener("click", closePopup);
 document.querySelector("#create-reminder").addEventListener("click", () => {
     const data = getPopupData();
 
-    sendData("POST", data, "reminders").then((response) => {
-        if (response.ok && response.status === 200) {
-            response.json().then((reminder) => {
-                if (reminder.assessment) {
-                    const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
-                    buttonElement.dataset.reminder = JSON.stringify(reminder);
-                    buttonElement.innerText = "notifications_active";
-                }
-                updateAlarms();
-            })
-        } else {
-            alert("Reminder Creation Failed")
+    apiSend("POST", data, "reminders", (reminder) => {
+        if (reminder.assessment) {
+            const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+            buttonElement.dataset.reminder = JSON.stringify(reminder);
+            buttonElement.innerText = "notifications_active";
         }
-        closePopup();
+        updateAlarms();
+        closePopup()
+    }, (response) => {
+        alert("Reminder creation failed.");
+        console.error("Reminder creation failed, with status " + response.status);
     })
 });
 
 document.querySelector("#save-reminder").addEventListener("click", () => {
     const data = getPopupData();
 
-    sendData("PATCH", data, "reminders").then((response) => {
-        if (response.ok && response.status === 200) {
-            response.json().then((reminder) => {
-                if (reminder.assessment) {
-                    const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
-                    buttonElement.dataset.reminder = JSON.stringify(reminder);
-                }
-                closePopup();
-                updateAlarms();
-                if (editFromViewPopup) {
-                    editFromViewPopup = false;
-                    viewRemindersPopup.classList.add("display");
-                    updateViewRemindersPopup();
-                }
-            })
-        } else {
-            alert("Reminder Editing Failed");
-            closePopup();
+    apiSend("PATCH", data, "reminders", (reminder) => {
+        if (reminder.assessment) {
+            const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+            buttonElement.dataset.reminder = JSON.stringify(reminder);
         }
+        closePopup();
+        updateAlarms();
+        if (editFromViewPopup) {
+            editFromViewPopup = false;
+            viewRemindersPopup.classList.add("display");
+            updateViewRemindersPopup();
+        }
+    }, (response) => {
+        alert("Reminder editing failed");
+        console.error("Reminder editing failed with response code " + response.status)
+        closePopup();
     })
 });
 

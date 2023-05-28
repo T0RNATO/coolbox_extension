@@ -6,7 +6,7 @@ function parseTemplate(template) {
 
     // If-blocks match {if <condition>; <html>}
     // Note: Closing brackets } must be alone on the line
-    template = template.replace(/{if ([\s\S]+); *([\s\S]+)^(\s*})/gm, (match, condition, html) => {
+    template = template.replace(/{if ([\s\S]+); ?([\s\S]+)^(\s*})/gm, (match, condition, html) => {
         // Eval is understandably blocked in extensions 😥, so I hardcoded it 😔
         if (condition === "!isWeekend" && !isWeekend) {
             return html;
