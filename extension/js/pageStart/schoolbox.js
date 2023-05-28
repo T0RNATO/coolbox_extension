@@ -108,11 +108,11 @@ apiGet("stats/message", (message) => {
 function prettifySubjectNames(names) {
     for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
         try {
-            const prettySubject = names.find(sub => sub.name.toLowerCase() === subject.nextElementSibling.innerText.toLowerCase());
+            const prettySubject = names.find(sub => `(${sub.name.toLowerCase()})` === subject.nextElementSibling.innerText.toLowerCase());
             if (prettySubject !== undefined) {
                 subject.innerText = prettySubject.pretty;
             } else {
-                console.log(`No pretty subject found for ${subject.innerText}`);
+                console.log(`No pretty subject found for ${subject.nextElementSibling.innerText}`);
             }
         } catch (error) {
             console.error(error);
@@ -124,8 +124,10 @@ chrome.storage.local.get(["subjects"]).then((subjects) => {
     // Don't even worry about this line of code
     subjects = subjects.subjects;
 
+    console.log(subjects.subjects)
+
     // If subject names have been saved, and that save has been updated in the last day
-    if (subjects.updated && Date.now() - subjects.updated < 86400000) {
+    if (subjects && subjects.updated && Date.now() - subjects.updated < 86400000) {
         prettifySubjectNames(subjects.subjects);
     } else {
         const unprettifiedNames = Array.from(
