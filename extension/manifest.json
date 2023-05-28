@@ -30,6 +30,14 @@
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/timetable"
       ]
+    },
+    {
+      "js": [
+        "js/all_pages.js"
+      ],
+      "matches": [
+        "https://schoolbox.donvale.vic.edu.au/*"
+      ]
     }
   ],
   "host_permissions": [

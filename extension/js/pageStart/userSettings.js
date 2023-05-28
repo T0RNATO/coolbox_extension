@@ -37,12 +37,8 @@ function rgbTiles() {
     } catch {}
 }
 
-chrome.storage.sync.get(["rgb_speed", "pfp"]).then((result) => {
+chrome.storage.sync.get(["rgb_speed"]).then((result) => {
     if (result.rgb_speed - 1) {
         startRgbTiles(result.rgb_speed);
-    }
-    if (result.pfp) {
-        document.querySelector("#search").classList.add("hidePfp");
-        document.querySelector("#profile-drop").remove();
     }
 });
