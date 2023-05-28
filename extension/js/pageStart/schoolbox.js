@@ -108,7 +108,7 @@ function prettifySubjectNames(names) {
     for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
         try {
             const unprettySubject = subject.nextElementSibling.innerText;
-            const prettySubject = names.find(sub => sub.name.toLowerCase() === unprettySubject.replace(/[()]/g, "").toLowerCase());
+            const prettySubject = names.find(sub => `(${sub.name.toLowerCase()})` === unprettySubject.toLowerCase());
             if (prettySubject !== undefined) {
                 subject.innerText = prettySubject.pretty;
             } else {
