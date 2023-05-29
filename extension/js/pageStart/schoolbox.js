@@ -156,5 +156,20 @@ chrome.storage.local.get(["subjects"]).then((subjects) => {
         })
     }
 }).catch((error) => {
-    console.error(error);
+    const unprettifiedNames = Array.from(
+        document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")
+    ).map(el => {return {name: el.innerText}})
+
+    // Fetch pretty names from API
+    apiSend("POST", unprettifiedNames, "subjects", (json) => {
+        // Update DOM
+        prettifySubjectNames(json);
+        // Cache results to reduce API load
+        chrome.storage.local.set({subjects: {
+            updated: Date.now(),
+            subjects: json
+        }})
+    }, (response) => {
+        console.error("Failed to fetch pretty subject names from api with response code " + response.status);
+    })
 });
