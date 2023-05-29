@@ -95,7 +95,7 @@ function apiSend(method, body, path, callback, errorCallback) {
         if (response.status === 200) {
             callback(data, response);
         } else {
-            apiError(response, error, errorCallback);
+            apiError(response, "", errorCallback);
         }
     }).catch((error) => {
         apiError(response, error, errorCallback);
@@ -112,7 +112,7 @@ function apiGet(path, callback, errorCallback) {
         if (response.status === 200) {
             callback(data, response);
         } else {
-            apiError(response, error, errorCallback);
+            apiError(response, "", errorCallback);
         }
     }).catch((error) => {
         apiError(response, error, errorCallback);
