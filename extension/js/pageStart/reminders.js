@@ -81,13 +81,22 @@ document.querySelector("#save-reminder").addEventListener("click", () => {
 });
 
 document.querySelector("#delete-reminder").addEventListener("click", () => {
-    deleteReminder(openReminder, () => {
+    apiSend("DELETE", {id: openReminder.id}, "reminders", (data) => {
+        updateAlarms();
+        if (openReminder.assessment) {
+            const buttonElement = document.querySelector(`a[href*='${openReminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
+            delete buttonElement.dataset.reminder;
+            buttonElement.innerText = "notification_add";
+        }
         closePopup();
         if (editFromViewPopup) {
             editFromViewPopup = false;
             viewRemindersPopup.classList.add("display");
             updateViewRemindersPopup();
         }
+    }, (response) => {
+        alert("Reminder deletion failed.");
+        console.error("Reminder deletion failed with response code " + response.status);
     })
 });
 

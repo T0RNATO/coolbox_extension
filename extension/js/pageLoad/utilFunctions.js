@@ -61,26 +61,9 @@ function getAssessmentId(link) {
     return Number(sections[sections.length - 2]);
 }
 
-function deleteReminder(reminder, callback) {
-    apiSend("DELETE", {id: reminder.id}, "reminders", (data) => {
-        updateAlarms();
-        if (reminder.assessment) {
-            const buttonElement = document.querySelector(`a[href*='${reminder.assessment}']`).parentElement.parentElement.querySelector(".reminder-button");
-            delete buttonElement.dataset.reminder;
-            buttonElement.innerText = "notification_add";
-        }
-        if (callback) {
-            callback();
-        }
-    }, (response) => {
-        alert("Reminder deletion failed.");
-        console.error("Reminder deletion failed with response code " + response.status);
-    })
-}
-
 function apiError(response, error, errorCallback) {
-    console.error(`Failed to access https://api.coolbox.lol/${path}, with code ${response.status}.`);
-    console.error(error);
+    console.error(`Failed to access API, with code ${response.status}.`);
+    console.error(JSON.stringify(error));
     if (errorCallback) {
         errorCallback(response, error)
     }
@@ -95,7 +78,7 @@ function apiSend(method, body, path, callback, errorCallback) {
         if (response.status === 200) {
             callback(data, response);
         } else {
-            apiError(response, "", errorCallback);
+            apiError(response, "Unknown", errorCallback);
         }
     }).catch((error) => {
         apiError(response, error, errorCallback);
@@ -112,7 +95,7 @@ function apiGet(path, callback, errorCallback) {
         if (response.status === 200) {
             callback(data, response);
         } else {
-            apiError(response, "", errorCallback);
+            apiError(response, "Unknown", errorCallback);
         }
     }).catch((error) => {
         apiError(response, error, errorCallback);
