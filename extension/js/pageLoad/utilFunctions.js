@@ -74,15 +74,26 @@ function apiSend(method, body, path, callback, errorCallback) {
         method: method,
         body: JSON.stringify(body),
         headers: headers
-    }).then(response => {response.json().then(data => {
-        if (response.status === 200) {
-            callback(data, response);
-        } else {
-            apiError(response, "Unknown", errorCallback);
-        }
-    }).catch((error) => {
-        apiError(response, error, errorCallback);
-    })}).catch((error) => {
+    }).then(response => {
+        // Check if response is json-serialisable
+        response.json().then(data => {
+            if (response.status === 200) {
+                callback(data, response);
+            } else {
+                apiError(response, "Unknown", errorCallback);
+            }
+        // If not, will error, disregard response
+        }).catch(() => {
+            if (response.status === 200) {
+                if (callback) {
+                    callback(response);
+                }
+            } else {
+                apiError(response, "Unknown", errorCallback);
+            }
+        })
+    }
+    ).catch((error) => {
         apiError(response, error, errorCallback);
     })
 }
