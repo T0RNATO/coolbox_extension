@@ -115,7 +115,7 @@ function apiGet(path, callback, errorCallback) {
             apiError(response, error, errorCallback);
         }
     })}).catch((error) => {
-    apiError(response, error, errorCallback);
+        apiError(response, error, errorCallback);
     })
 }
 
