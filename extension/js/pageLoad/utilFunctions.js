@@ -87,40 +87,36 @@ function apiError(response, error, errorCallback) {
 }
 
 function apiSend(method, body, path, callback, errorCallback) {
-    try {
-        fetch("https://api.coolbox.lol/" + path, {
-            method: method,
-            body: JSON.stringify(body),
-            headers: headers
-        }).then(response => {response.json().then(data => {
-            if (response.status === 200) {
-                if (callback) {
-                    callback(data, response);
-                } else {
-                    apiError(response, error, errorCallback);
-                }
-            }
-        })})
-    } catch (error) {
-        apiError(response, error, errorCallback);
-    }
-}
-
-function apiGet(path, callback, errorCallback) {
-    try {
-        fetch("https://api.coolbox.lol/" + path, {
-            method: "GET",
-            headers: headers
-        }).then(response => {response.json().then(data => {
-            if (response.status === 200) {
+    fetch("https://api.coolbox.lol/" + path, {
+        method: method,
+        body: JSON.stringify(body),
+        headers: headers
+    }).then(response => {response.json().then(data => {
+        if (response.status === 200) {
+            if (callback) {
                 callback(data, response);
             } else {
                 apiError(response, error, errorCallback);
             }
-        })})
-    } catch (error) {
+        }
+    })}).catch((error) => {
         apiError(response, error, errorCallback);
-    }
+    })
+}
+
+function apiGet(path, callback, errorCallback) {
+    fetch("https://api.coolbox.lol/" + path, {
+        method: "GET",
+        headers: headers
+    }).then(response => {response.json().then(data => {
+        if (response.status === 200) {
+            callback(data, response);
+        } else {
+            apiError(response, error, errorCallback);
+        }
+    })}).catch((error) => {
+    apiError(response, error, errorCallback);
+    })
 }
 
 function getPopupData() {
