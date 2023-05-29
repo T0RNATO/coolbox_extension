@@ -93,11 +93,9 @@ function apiSend(method, body, path, callback, errorCallback) {
         headers: headers
     }).then(response => {response.json().then(data => {
         if (response.status === 200) {
-            if (callback) {
-                callback(data, response);
-            } else {
-                apiError(response, error, errorCallback);
-            }
+            callback(data, response);
+        } else {
+            apiError(response, error, errorCallback);
         }
     })}).catch((error) => {
         apiError(response, error, errorCallback);
