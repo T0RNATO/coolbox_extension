@@ -97,6 +97,8 @@ function apiSend(method, body, path, callback, errorCallback) {
         } else {
             apiError(response, error, errorCallback);
         }
+    }).catch((error) => {
+        apiError(response, error, errorCallback);
     })}).catch((error) => {
         apiError(response, error, errorCallback);
     })
@@ -112,6 +114,8 @@ function apiGet(path, callback, errorCallback) {
         } else {
             apiError(response, error, errorCallback);
         }
+    }).catch((error) => {
+        apiError(response, error, errorCallback);
     })}).catch((error) => {
         apiError(response, error, errorCallback);
     })
