@@ -38,6 +38,15 @@
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/*"
       ]
+    },
+    {
+      "js": [
+        "js/darkmode.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "https://schoolbox.donvale.vic.edu.au/*"
+      ]
     }
   ],
   "host_permissions": [

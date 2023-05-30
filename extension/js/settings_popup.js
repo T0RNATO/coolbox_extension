@@ -2,6 +2,7 @@ let cookie;
 
 const rgbInput = document.querySelector("#rgb");
 const pfpSwitch = document.querySelector("#pfp");
+const darkSwitch = document.querySelector("#dark")
 
 function unlink() {
     fetch("https://api.coolbox.lol/discord", {method: "DELETE", headers: new Headers({
@@ -61,7 +62,26 @@ pfpSwitch.addEventListener("click", () => {
     })
 })
 
-chrome.storage.sync.get(["rgb_speed", "pfp"]).then((result) => {
-    rgbInput.value = result.rgb_speed;
-    pfpSwitch.checked = result.pfp;
+darkSwitch.addEventListener("click", () => {
+    chrome.storage.sync.set({
+        dark_mode: darkSwitch.checked
+    })
+})
+
+chrome.storage.sync.get(["rgb_speed", "pfp", "dark_mode"]).then((result) => {
+    if (result.rgb_speed) {
+        rgbInput.value = result.rgb_speed;
+    } else {
+        rgbInput.value = 1;
+    }
+    if (result.pfp) {
+        pfpSwitch.checked = result.pfp;
+    } else {
+        pfpSwitch.checked = false;
+    }
+    if (result.dark_mode) {
+        darkSwitch.checked = result.dark_mode;
+    } else {
+        darkSwitch.checked = false;
+    }
 });

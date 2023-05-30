@@ -26,6 +26,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         tabId: sender.tab.id
                     }
                 })
+                break;
+            case "enableDarkMode":
+                chrome.scripting.insertCSS({
+                    files: ["css/darkmode.css"],
+                    target: {
+                        tabId: sender.tab.id
+                    }
+                })
+                break;
+            case "disableDarkMode":
+                chrome.scripting.removeCSS({
+                    files: ["css/darkmode.css"],
+                    target: {
+                        tabId: sender.tab.id
+                    }
+                })
+                break;
         }
     }  
 });
