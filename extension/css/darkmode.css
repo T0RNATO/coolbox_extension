@@ -12,11 +12,11 @@
     background: var(--generic-dark);
 }
 
-a {
-    color: var(--link-colour);
+a:not(#notification-toggle):not(.button) {
+    color: var(--link-colour) !important;
 }
 
-h1 {
+body h1 {
     color: var(--dark-text) !important;
 }
 
@@ -25,7 +25,7 @@ h1 {
 }
 
 .timetable th, .alert-box {
-    background-color: var(--generic-dark);
+    background-color: var(--generic-dark) !important;
     color: var(--dark-text);
 }
 
@@ -51,7 +51,7 @@ h1 {
 }
 
 .component-action section {
-    background-color: var(--generic-dark);
+    background-color: var(--generic-dark) !important;
 }
 
 .list-item {
@@ -76,7 +76,7 @@ li.actions-small-1 {
 }
   
 .empty-state {
-    background-color: var(--generic-dark);
+    background-color: var(--generic-dark) !important;
 }
   
 ul.grid {
@@ -178,4 +178,16 @@ blockquote {
 
 a.button {
 	background-color: var(--dark-accent);
+}
+
+article {
+    color: var(--dark-text);
+}
+
+div#account-content {
+    background-color: var(--generic-dark);
+}
+
+.account-drop .separator {
+    color: var(--dark-text) !important;
 }
