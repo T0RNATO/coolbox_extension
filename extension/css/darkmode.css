@@ -36,7 +36,7 @@ span[data-assessment-status-text] {
     color: var(--dark-text);
 }
 
-.timetable th, .alert-box {
+.timetable th, body .alert-box {
     background-color: var(--generic-dark) !important;
     color: var(--dark-text);
 }

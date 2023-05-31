@@ -116,3 +116,8 @@ input[type='checkbox']:checked::after {
 .settings-label {
     margin-right: 10px;
 }
+
+span.warning {
+    font-size: 12px;
+    color: red;
+}
