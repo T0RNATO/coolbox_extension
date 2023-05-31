@@ -2,11 +2,18 @@
     --body-background: #1e1e24;
     --off-canvas-hover: var(--dark-accent);
     --off-canvas-background: var(--generic-dark);
+    --form-border-color: var(--body-background);
+    --form-bg-hover-color: var(--dark-accent);
 
     --generic-dark: #302f33;
     --dark-accent: #47464a;
     --dark-text: #e8e8e8;
     --link-colour: #59a9ff;
+}
+
+body textarea {
+    background-color: var(--body-background);
+    color: var(--dark-text) !important;
 }
 
 .card {
@@ -17,8 +24,12 @@
     color: var(--link-colour) !important;
 }
 
-body h1, h3 {
+body h1, :not(a) > h3 {
     color: var(--dark-text) !important;
+}
+
+span[data-assessment-status-text] {
+    color: var(--dark-text);
 }
 
 #timeLeft {
@@ -140,12 +151,17 @@ ul.off-canvas-list * {
     background: var(--generic-dark);
 }
 
-blockquote {
+body blockquote {
 	background-color: var(--body-background);
 	color: var(--dark-text);
+    border-left-color: var(--dark-accent);
 }
 
-.rubric-wrap th, .rubric-wrap td {
+body blockquote::before {
+    color: var(--dark-accent);
+}
+
+.rubric-wrap th, .rubric-wrap td, .markable th, .markable td {
 	background-color: var(--generic-dark);
 	color: var(--dark-text) !important;
 	border: 1px solid var(--dark-text) !important;
@@ -195,4 +211,8 @@ div#account-content {
 
 .account-drop .separator {
     color: var(--dark-text) !important;
+}
+
+rect.highcharts-background {
+    fill: var(--body-background);
 }
