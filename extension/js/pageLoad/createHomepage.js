@@ -8,16 +8,16 @@ chrome.runtime.sendMessage("getCookie", (cook) => {
         "Authorization": "Bearer " + cookie,
         "Content-Type": "application/json"
     })
+
+    fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepage => {homepage.text().then(page => {
+        document.querySelector("#content").classList.add("hide");
+    
+        const content = document.createElement("div");
+        content.id = "content-new";
+        content.innerHTML = parseTemplate(page);
+    
+        document.querySelector("#container").insertBefore(content, document.querySelector("#content"));
+    
+        chrome.runtime.sendMessage("pageLoaded");
+    })});
 });
-
-fetch(chrome.runtime.getURL("html/homepage.html"), {method: "GET"}).then(homepage => {homepage.text().then(page => {
-    document.querySelector("#content").classList.add("hide");
-
-    const content = document.createElement("div");
-    content.id = "content-new";
-    content.innerHTML = parseTemplate(page);
-
-    document.querySelector("#container").insertBefore(content, document.querySelector("#content"));
-
-    chrome.runtime.sendMessage("pageLoaded");
-})});
