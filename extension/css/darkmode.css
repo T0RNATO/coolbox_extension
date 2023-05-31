@@ -1,6 +1,7 @@
 :root.touch {
     --body-background: #1e1e24;
     --off-canvas-hover: var(--dark-accent);
+    --off-canvas-background: var(--generic-dark);
 
     --generic-dark: #302f33;
     --dark-accent: #47464a;
@@ -12,11 +13,11 @@
     background: var(--generic-dark);
 }
 
-a:not(#notification-toggle):not(.button) {
+:not(.timetable-subject) > a:not(#notification-toggle):not(.button) {
     color: var(--link-colour) !important;
 }
 
-body h1 {
+body h1, h3 {
     color: var(--dark-text) !important;
 }
 
@@ -29,9 +30,13 @@ body h1 {
     color: var(--dark-text);
 }
 
-.timetable-period-active, .timetable-day-active {
+th.timetable-period-active, .timetable-day-active {
     background-color: var(--dark-accent) !important;
     color: var(--dark-text) !important;
+}
+
+.content h2 {
+    color: var(--dark-text);
 }
 
 .timetable-subject a {
