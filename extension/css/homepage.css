@@ -100,7 +100,7 @@ dl.tabs {
     width: 48% !important;
 }
 
-.timetable-subject {
+.timetable-subject:not(:first-child):not(div + div) {
     min-height: 95px !important;
     height: 100% !important;
 }
