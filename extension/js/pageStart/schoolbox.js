@@ -128,9 +128,17 @@ function prettifySubjectNames(names) {
 
     for (const dueWorkItem of document.querySelectorAll(".due-work .meta a")) {
         const unprettySubject = dueWorkItem.innerText;
-        const prettySubject = names.find(sub => sub.name.toLowerCase() === unprettySubject.replace(/\)|(.*\()/g, "").toLowerCase());
+        const prettySubject = names.find(sub => `(${sub.name.toLowerCase()})` === unprettySubject.toLowerCase());
         if (prettySubject !== undefined) {
             dueWorkItem.innerText = prettySubject.pretty;
+        }
+    }
+
+    for (const sidebarSubject of document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")) {
+        const unprettySubject = sidebarSubject.innerText;
+        const prettySubject = names.find(sub => sub.name.toLowerCase() === unprettySubject.toLowerCase());
+        if (prettySubject !== undefined) {
+            sidebarSubject.innerText = `${prettySubject.pretty} (${unprettySubject.slice(unprettySubject.length - 1)})`;
         }
     }
 }
