@@ -1,5 +1,11 @@
 const range = n => [...Array(n).keys()]
-const timeFormat = "l F J Y h:iK"
+const calendarConfig = {
+    required: true,
+    autoClose: false,
+    weekStart: 1,
+    inputFormat: "DD/MM/YYYY HH:mm",
+    timeInterval: 900,
+}
 
 let currentReminders;
 let editFromViewPopup = false;
@@ -33,9 +39,11 @@ function updateViewRemindersPopup() {
             rem.classList.add("rem-display");
             rem.dataset["id"] = i;
 
+            const due = new Date(reminder.due);
+
             rem.innerHTML = /*html*/`
                 <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
-                ${reminder.due}
+                ${due.toLocaleDateString()} @ ${due.toLocaleTimeString()}
                 <div class="rem-view-edit">
                     <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
                 </div>
@@ -176,7 +184,8 @@ function openReminderEditPopup(reminder, type) {
     updateWarnings(reminder.method);
 
     // Automatically select the time of the due work item
-    timePicker.setValue(reminder.due);
+    timePicker.options(Object.assign(calendarConfig, {initialValue: new Date(reminder.due)}))
+    console.log(reminder.due, timePicker.getDate().getTime());
     createReminderPopup.classList.add("display");
 }
 

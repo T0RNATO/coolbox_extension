@@ -37,14 +37,7 @@ for (const dueWorkItem of document.querySelectorAll(".due-work > li:not(:last-ch
 }
 
 // Initialise the calendar
-let timePicker = rome(document.querySelector("#rem-time"), {
-    required: true,
-    initialValue: new Date(),
-    autoClose: false,
-    weekStart: 1,
-    inputFormat: "DD/MM/YYYY HH:mm",
-    timeInterval: 900,
-})
+let timePicker = rome(document.querySelector("#rem-time"), calendarConfig);
 
 timePicker.container.addEventListener("click", (ev) => {ev.stopPropagation()});
 document.querySelector("#rem-time").addEventListener("click", (ev) => {ev.stopPropagation()});
