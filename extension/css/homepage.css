@@ -250,3 +250,73 @@ dl.tabs {
     color: red;
     display: none;
 }
+
+/* Splitscreen support, transpose timetable */
+@media only screen and (max-width: 64em) {
+    .grid-parent {
+        grid-template-columns: 50% 50%;
+    }
+
+    li.tile {
+        width: 32% !important;
+        aspect-ratio: 1/1;
+    }
+
+    ul.tileList {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .timetable {
+        width: min-content;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+        "head body";
+    }
+    .timetable thead {
+        grid-area: head;
+    }
+    .timetable tbody {
+        grid-area: body;
+    }
+    .timetable thead {
+        display: flex;
+        min-width: min-content;
+    }
+    .timetable tbody {
+        display: flex;
+    }
+    .timetable tr {
+        display: flex;
+        flex-direction: column;
+        min-width: min-content;
+    }
+    .timetable td, .timetable th {
+        display: block;
+    }
+    .timetable td {
+        height: auto;
+        width: calc(100% + 30px) !important;
+    }
+    .timetable th {
+        height: 20%;
+        width: 100% !important;
+    }
+
+    li.tile:nth-of-type(1) { --rotate: 0;}
+    li.tile:nth-of-type(2) { --rotate: 48;}
+    li.tile:nth-of-type(3) { --rotate: 96;}
+    li.tile:nth-of-type(4) { --rotate: 48;}
+    li.tile:nth-of-type(5) { --rotate: 96;}
+    li.tile:nth-of-type(6) { --rotate: 144;}
+    li.tile:nth-of-type(7) { --rotate: 96;}
+    li.tile:nth-of-type(8) { --rotate: 144;}
+    li.tile:nth-of-type(9) { --rotate: 192;}
+    li.tile:nth-of-type(10) { --rotate: 144;}
+    li.tile:nth-of-type(11) { --rotate: 192;}
+    li.tile:nth-of-type(12) { --rotate: 250;}
+    li.tile:nth-of-type(13) { --rotate: 192;}
+    li.tile:nth-of-type(14) { --rotate: 250;}
+    li.tile:nth-of-type(15) { --rotate: 288;}
+}
