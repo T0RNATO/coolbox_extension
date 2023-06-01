@@ -35,7 +35,7 @@ function updateViewRemindersPopup() {
 
             rem.innerHTML = /*html*/`
                 <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
-                ${flatpickr.formatDate(new Date(reminder.due), timeFormat)}
+                ${reminder.due}
                 <div class="rem-view-edit">
                     <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
                 </div>
@@ -117,7 +117,7 @@ function apiGet(path, callback, errorCallback) {
 
 function getPopupData() {
     const title = document.querySelector("#rem-name").value;
-    const time = timePicker.selectedDates[0].getTime();
+    const time = timePicker.getDate().getTime();
     if (document.querySelector(".popup-radio:checked") === null) {
         return alert("Select Notification Method");
     }
@@ -143,7 +143,7 @@ function getPopupData() {
 /**
  * @param {Object} reminder
  * @param {Number} reminder.id
- * @param {Number|String} reminder.due
+ * @param {Number} reminder.due
  * @param {Number} reminder.assessment
  * @param {String} reminder.title
  * @param {String} reminder.method
@@ -151,6 +151,7 @@ function getPopupData() {
  * @param {String} type - The type of the popup - "create" or "edit"
 */
 function openReminderEditPopup(reminder, type) {
+    console.log(reminder);
     // Save the open reminder
     openReminder = reminder;
 
@@ -175,11 +176,7 @@ function openReminderEditPopup(reminder, type) {
     updateWarnings(reminder.method);
 
     // Automatically select the time of the due work item
-    if (typeof reminder.due === "string") {
-        timePicker.setDate(reminder.due.replace("am", "AM").replace("fm", "FM"), false, timeFormat);
-    } else {
-        timePicker.setDate(reminder.due)
-    }
+    timePicker.setValue(reminder.due);
     createReminderPopup.classList.add("display");
 }
 
@@ -201,7 +198,7 @@ function dueWorkItemButtonClick(ev) {
             id: null,
             title: button.parentElement.querySelector("h3").innerText,
             method: null,
-            due: button.parentElement.querySelector("[title*=' ']").title,
+            due: new Date(button.parentElement.querySelector("time").dateTime).getTime(),
             assessment: getAssessmentId(button.parentElement.querySelector("a").href)
         }, "create");
     }

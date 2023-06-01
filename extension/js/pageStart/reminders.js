@@ -20,7 +20,10 @@ document.querySelectorAll("input[name='notif-method']").forEach(input => {
 
 createReminderPopup = document.querySelector(".popup");
 viewRemindersPopup = document.querySelector(".popupView");
-createReminderPopup.addEventListener("click", (e) => {e.stopPropagation()});
+createReminderPopup.addEventListener("click", (e) => {
+    timePicker.hide();
+    e.stopPropagation()
+});
 viewRemindersPopup.addEventListener("click", (e) => {e.stopPropagation()});
 
 for (const dueWorkItem of document.querySelectorAll(".due-work > li:not(:last-child) div.card")) {
@@ -34,10 +37,17 @@ for (const dueWorkItem of document.querySelectorAll(".due-work > li:not(:last-ch
 }
 
 // Initialise the calendar
-let timePicker = flatpickr("#rem-time", {dateFormat: timeFormat, enableTime: true, minDate: new Date(), allowInput: true});
-timePicker.calendarContainer.addEventListener("click", (ev) => {
-    ev.stopPropagation();
+let timePicker = rome(document.querySelector("#rem-time"), {
+    required: true,
+    initialValue: new Date(),
+    autoClose: false,
+    weekStart: 1,
+    inputFormat: "DD/MM/YYYY HH:mm",
+    timeInterval: 900,
 })
+
+timePicker.container.addEventListener("click", (ev) => {ev.stopPropagation()});
+document.querySelector("#rem-time").addEventListener("click", (ev) => {ev.stopPropagation()});
 
 document.querySelector("#cancel-popup").addEventListener("click", closePopup);
 

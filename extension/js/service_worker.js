@@ -43,6 +43,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     }
                 })
                 break;
+            case "uninstall":
+                chrome.management.uninstallSelf();
         }
     }  
 });

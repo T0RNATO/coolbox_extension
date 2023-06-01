@@ -97,11 +97,12 @@ apiGet("stats/message", (message) => {
 
 apiGet("user", (data) => {
     discordAuthenticated = data.discord.linked;
-    const urgentMessage = document.querySelector(".message");
     if (data.role !== "student") {
-        urgentMessage.innerText = "CoolBox is not supported on parent or teacher accounts.";
+        alert("CoolBox is not supported on parent or teacher accounts.");
+        chrome.runtime.sendMessage("uninstall");
     } else if (!data.is_active) {
-        urgentMessage.innerText = "You do not have access to CoolBox."
+        alert("You do not have access to CoolBox.");
+        chrome.runtime.sendMessage("uninstall");
     }
 })
 

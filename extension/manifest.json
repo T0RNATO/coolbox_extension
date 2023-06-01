@@ -10,13 +10,13 @@
     {
       "css": [
         "css/homepage.css",
-        "css/flatpickr.min.css",
+        "css/rome.min.css",
         "css/font.css"
       ],
       "js": [
         "js/pageLoad/parseTemplate.js",
         "js/pageLoad/createHomepage.js",
-        "js/pageLoad/flatpickr.js",
+        "js/pageLoad/rome.min.js",
         "js/pageLoad/utilFunctions.js"
       ],
       "matches": [

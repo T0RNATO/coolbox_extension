@@ -216,3 +216,14 @@ div#account-content {
 rect.highcharts-background {
     fill: var(--body-background);
 }
+
+.popup, .popupView {
+    background-color: var(--generic-dark);
+    color: var(--dark-text);
+    filter: drop-shadow(black 2px 4px 6px);
+}
+
+.popup input, .popupView input {
+    background-color: var(--body-background) !important;
+    color: var(--dark-text) !important;
+}

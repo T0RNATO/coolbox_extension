@@ -192,7 +192,8 @@ dl.tabs {
 }
 
 .popup-radio:checked + label {
-    outline: solid 1px var(--content-ui-foreground);
+    outline: solid 3px var(--content-ui-foreground);
+    outline-offset: -3px;
 }
 
 .rem-button {
