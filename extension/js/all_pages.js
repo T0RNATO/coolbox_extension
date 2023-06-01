@@ -11,10 +11,10 @@ chrome.storage.onChanged.addListener((changes) => {
 
 function updatePfp(pfp) {
     if (pfp) {
-        document.querySelector("#search").style.setProperty("right", "4.5em", "important");
+        document.body.classList.add("hidePfp");
         document.querySelector("#profile-drop").style.setProperty("display", "none");
     } else {
-        document.querySelector("#search").style.setProperty("right", null);
+        document.body.classList.remove("hidePfp");
         document.querySelector("#profile-drop").style.setProperty("display", "unset");
     }
 }

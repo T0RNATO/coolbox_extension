@@ -35,6 +35,9 @@
       "js": [
         "js/all_pages.js"
       ],
+      "css": [
+        "css/all_pages.css"
+      ],
       "matches": [
         "https://schoolbox.donvale.vic.edu.au/*"
       ]

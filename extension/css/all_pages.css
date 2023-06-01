@@ -1,0 +1,8 @@
+body.hidePfp #search-field {
+    width: calc(100% + 4.5em);
+    transform: translateX(-4.5em);
+}
+
+body.hidePfp form.global-search {
+    right: 4.5em !important;
+}
