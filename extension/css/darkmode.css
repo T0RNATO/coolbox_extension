@@ -217,13 +217,21 @@ rect.highcharts-background {
     fill: var(--body-background);
 }
 
-.popup, .popupView {
+.popup {
     background-color: var(--generic-dark);
     color: var(--dark-text);
     filter: drop-shadow(black 2px 4px 6px);
 }
 
-.popup input, .popupView input {
+.popup input {
     background-color: var(--body-background) !important;
+    color: var(--dark-text) !important;
+}
+
+#cb-settings {
+    color: var(--dark-text);
+}
+
+label {
     color: var(--dark-text) !important;
 }

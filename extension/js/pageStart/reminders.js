@@ -1,5 +1,3 @@
-let createReminderPopup, viewRemindersPopup;
-
 apiGet("reminders", (reminders) => {
     currentReminders = reminders;
     console.log(reminders);
@@ -18,13 +16,16 @@ document.querySelectorAll("input[name='notif-method']").forEach(input => {
     input.addEventListener("click", (event) => {updateWarnings(event.target.value)});
 })
 
-createReminderPopup = document.querySelector(".popup");
-viewRemindersPopup = document.querySelector(".popupView");
+const createReminderPopup = document.querySelector("#popup-create-reminder");
+const viewRemindersPopup = document.querySelector("#popup-view-reminders");
+const feedbackPopup = document.querySelector("#popup-feedback");
+
 createReminderPopup.addEventListener("click", (e) => {
     timePicker.hide();
     e.stopPropagation()
 });
 viewRemindersPopup.addEventListener("click", (e) => {e.stopPropagation()});
+feedbackPopup.addEventListener("click", (e) => {e.stopPropagation()});
 
 for (const dueWorkItem of document.querySelectorAll(".due-work > li:not(:last-child) div.card")) {
     const reminderButton = document.createElement("div");

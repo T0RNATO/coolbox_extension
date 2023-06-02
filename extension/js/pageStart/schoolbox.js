@@ -177,3 +177,21 @@ chrome.storage.local.get(["subjects"]).then((subjects) => {
 }).catch(() => {
     fetchPrettySubjectNames();
 });
+
+document.querySelector("#cb-feedback").addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    closePopup();
+    feedbackPopup.classList.add("display");
+})
+
+document.querySelector("#send-feedback").addEventListener("click", (ev) => {
+    apiSend("POST", {
+        origin: "schoolbox",
+        content: document.querySelector("#feedback").value,
+        anonymous: document.querySelector("#feedback-anon").checked
+    }, "feedback", () => {
+        closePopup();
+        document.querySelector("#feedback").value = "";
+        document.querySelector("#feedback-anon").checked = false;
+    })
+})

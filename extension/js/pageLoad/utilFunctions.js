@@ -190,8 +190,9 @@ function openReminderEditPopup(reminder, type) {
 }
 
 function closePopup() {
-    document.querySelector(".popup").classList.remove("display");
-    document.querySelector(".popupView").classList.remove("display");
+    createReminderPopup.classList.remove("display");
+    viewRemindersPopup.classList.remove("display");
+    feedbackPopup.classList.remove("display");
     createReminderPopup.querySelector("#rem-name").value = "";
     openReminder = null;
 }

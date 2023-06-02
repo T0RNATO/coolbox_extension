@@ -148,7 +148,7 @@ dl.tabs {
     filter: invert(0.4);
 }
 
-.popup, .popupView {
+.popup {
     display: none;
     position: fixed;
     background: white;
@@ -158,14 +158,11 @@ dl.tabs {
     left: 50%;
     transform: translate(-50%, -50%);
     filter: drop-shadow(2px 4px 6px gray);
+    overflow-y: auto;
 }
 
 .display {
     display: block !important;
-}
-
-.popupView {
-    overflow-y: auto;
 }
 
 .popup-body {
@@ -249,6 +246,31 @@ dl.tabs {
 .notif-warning {
     color: red;
     display: none;
+}
+
+#coolbox {
+    padding: 10px;
+}
+
+#cb-settings {
+    display: block;
+}
+
+#feedback {
+    margin: 10px 0;
+    height: 125px;
+}
+
+span.disclaimer {
+    color: gray;
+    font-style: italic;
+    margin: 5px 0 10px 0;
+    display: block;
+    font-size: 12px;
+}
+
+label {
+    font-size: 16px !important;
 }
 
 /* Splitscreen support, transpose timetable */

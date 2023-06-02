@@ -23,6 +23,17 @@
             }
             <!-- Tiles -->
             {element #tileList-2248}
+
+            <div id="coolbox">
+                <h1>CoolBox</h1>
+                <span id="cb-settings">
+                    Edit extension settings by clicking the CoolBox extension icon in the extensions menu (top right).
+                    <br>
+                    Got questions, comments, suggestions? Send us feedback!
+                    <br><br>
+                </span>
+                <button id="cb-feedback">Submit Feedback</button>
+            </div>
         </div>
         <div class="section">
             <h2 class="subheader">Upcoming Due Work</h2>
@@ -53,7 +64,7 @@
         </div>
     </div>
 
-    <div class="popup">
+    <div class="popup" id="popup-create-reminder">
         <div class="popup-title">
             <h1 id="create-title"><strong>Create Reminder</strong></h1>
             <h1 id="edit-title"><strong>Edit Reminder</strong></h1>
@@ -87,12 +98,29 @@
         </div>
     </div>
 
-    <div class="popupView">
+    <div class="popup" id="popup-view-reminders">
         <div class="popup-title">
             <h1><strong>Reminders</strong></h1>
         </div>
         <div class="popup-body" id="view-rem-container">
             Loading...
+        </div>
+    </div>
+
+    <div class="popup" id="popup-feedback">
+        <div class="popup-title">
+            <h1><strong>Send Feedback</strong></h1>
+        </div>
+        <div class="popup-body">
+            Submit your feedback, comments, suggestions, or bug reports here.
+            <textarea id="feedback"></textarea>
+            <input type="checkbox" id="feedback-anon" class="plain">
+            <label for="feedback-anon">Anonymous</label>
+            <span class="disclaimer">
+                Please note that your name will be visible on your feedback unless you tick the checkbox.<br>
+                Keeping your name means we can follow up if needed.
+            </span>
+            <button id="send-feedback">Send Feedback</button>
         </div>
     </div>
 </div>
