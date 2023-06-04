@@ -112,7 +112,12 @@ function apiGet(path, callback, errorCallback) {
         headers: headers
     }).then(response => {response.json().then(data => {
         if (response.status === 200) {
-            callback(data, response);
+            try {
+                callback(data, response);
+            } catch (error) {
+                console.error("Error in callback:");
+                console.error(error);
+            }
         } else {
             apiError(response, "Unknown", errorCallback);
         }
