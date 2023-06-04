@@ -57,7 +57,6 @@ function prettifySubjectNames(names) {
             const prettySubject = names.find(sub =>
                 sub.name.toLowerCase() === unprettySubject.replace(/\)|(.*\()/g, "").toLowerCase()
             );
-            console.log(dueWorkItem, unprettySubject, prettySubject);
             if (prettySubject !== undefined) {
                 dueWorkItem.innerText = prettySubject.pretty;
             }
