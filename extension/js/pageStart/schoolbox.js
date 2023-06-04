@@ -112,20 +112,27 @@ document.querySelector("#cb-feedback").addEventListener("click", (ev) => {
     feedbackPopup.classList.add("display");
 })
 
+let acceptingFeedback = true;
+
 document.querySelector("#send-feedback").addEventListener("click", (ev) => {
-    apiSend("POST", {
-        origin: "schoolbox",
-        // origin: "test",
-        content: document.querySelector("#feedback").value,
-        anonymous: document.querySelector("#feedback-anon").checked
-    }, "feedback", () => {
-        closePopup();
-        document.querySelector("#feedback").value = "";
-        document.querySelector("#feedback-anon").checked = false;
-        document.querySelector("#sending-fb").classList.add("hide");
-        document.querySelector("#sending-fb").innerText = "Sending...";
-    }, () => {
-        document.querySelector("#sending-fb").innerText = "Failed to send feedback. Please try again later.";
-    })
-    document.querySelector("#sending-fb").classList.remove("hide");
+    if (acceptingFeedback) {
+        apiSend("POST", {
+            // origin: "schoolbox",
+            origin: "test",
+            content: document.querySelector("#feedback").value,
+            anonymous: document.querySelector("#feedback-anon").checked
+        }, "feedback", () => {
+            closePopup();
+            document.querySelector("#feedback").value = "";
+            document.querySelector("#feedback-anon").checked = false;
+            document.querySelector("#sending-fb").classList.add("hide");
+            document.querySelector("#sending-fb").innerText = "Sending...";
+
+            acceptingFeedback = true;
+        }, () => {
+            document.querySelector("#sending-fb").innerText = "Failed to send feedback. Please try again later.";
+        })
+        document.querySelector("#sending-fb").classList.remove("hide");
+        acceptingFeedback = false;
+    }
 })
