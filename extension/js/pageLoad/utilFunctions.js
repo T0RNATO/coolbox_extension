@@ -43,7 +43,7 @@ function updateViewRemindersPopup() {
 
             rem.innerHTML = /*html*/`
                 <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
-                ${due.toLocaleDateString()} @ ${due.toLocaleTimeString("en-US", {timeStyle: "short", month: "short"})}
+                ${due.toLocaleDateString()} @ ${due.toLocaleTimeString("en-US", {timeStyle: "short"})}
                 <div class="rem-view-edit">
                     <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
                 </div>
@@ -71,7 +71,7 @@ function getAssessmentId(link) {
 
 function apiError(response, error, errorCallback) {
     console.error(`Failed to access API, with code ${response.status}.`);
-    console.error(JSON.stringify(error));
+    console.error(error);
     if (errorCallback) {
         errorCallback(response, error)
     }
