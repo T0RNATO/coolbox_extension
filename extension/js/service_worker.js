@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     files: [
                         "js/pageStart/reminders.js",
                         "js/pageStart/schoolbox.js",
-                        "js/pageStart/userSettings.js"
+                        "js/pageStart/rgbTiles.js"
                     ],
                     target: {
                         tabId: sender.tab.id

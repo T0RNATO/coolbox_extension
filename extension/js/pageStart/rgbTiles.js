@@ -1,3 +1,18 @@
+const mql = window.matchMedia("only screen and (max-width: 64em)");
+
+let tiles_per_row;
+
+function updateTilesPerRow() {
+    if (mql.matches) {
+        tiles_per_row = 3;
+    } else {
+        tiles_per_row = 5;
+    }
+    rows = tiles.length / tiles_per_row;
+}
+
+mql.addEventListener("change", updateTilesPerRow);
+
 function startRgbTiles(speed) {
     clearInterval(rgbInterval);
 
@@ -22,14 +37,14 @@ let rgbValue = 0;
 let rgbInterval, rgbCount;
 
 const tiles = document.querySelectorAll('li.tile');
-const rows = tiles.length / 5;
+let rows = tiles.length / tiles_per_row;
 
 function rgbTiles() {
     rgbValue -= 3;
     rgbCount = 0;
     try {
       for (const i of range(rows)) {
-          for (const j of range(5)) {
+          for (const j of range(tiles_per_row)) {
               tiles[rgbCount].style.setProperty('--rotate', rgbValue + (i + j) * 20)
               rgbCount += 1;
           }
@@ -42,3 +57,5 @@ chrome.storage.sync.get(["rgb_speed"]).then((result) => {
         startRgbTiles(result.rgb_speed);
     }
 });
+
+updateTilesPerRow();
