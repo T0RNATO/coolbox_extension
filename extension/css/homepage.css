@@ -299,15 +299,11 @@ label {
     }
     .timetable thead {
         grid-area: head;
-    }
-    .timetable tbody {
-        grid-area: body;
-    }
-    .timetable thead {
         display: flex;
         min-width: min-content;
     }
     .timetable tbody {
+        grid-area: body;
         display: flex;
     }
     .timetable tr {
