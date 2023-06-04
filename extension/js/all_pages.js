@@ -15,7 +15,7 @@ function updatePfp(pfp) {
         document.querySelector("#profile-drop").style.setProperty("display", "none");
     } else {
         document.body.classList.remove("hidePfp");
-        document.querySelector("#profile-drop").style.setProperty("display", "unset");
+        document.querySelector("#profile-drop").style.setProperty("display", null);
     }
 }
 
