@@ -43,7 +43,7 @@ function updateViewRemindersPopup() {
 
             rem.innerHTML = /*html*/`
                 <strong>${reminder.title}</strong> (Ping on ${reminder.method})<br>
-                ${due.toLocaleDateString()} @ ${due.toLocaleTimeString("en-US", {timeStyle: "short"})}
+                ${due.toLocaleDateString()} @ ${due.toLocaleTimeString("en-US", {timeStyle: "short", month: "short"})}
                 <div class="rem-view-edit">
                     <span class="material-symbols-outlined rem-view-button rem-view-edit-b">edit</span>
                 </div>

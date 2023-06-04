@@ -19,5 +19,7 @@ chrome.runtime.sendMessage("getCookie", (cook) => {
         document.querySelector("#container").insertBefore(content, document.querySelector("#content"));
     
         chrome.runtime.sendMessage("pageLoaded");
+
+        document.body.dispatchEvent(new Event("pageLoaded"));
     })});
 });

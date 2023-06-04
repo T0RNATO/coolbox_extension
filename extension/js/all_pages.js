@@ -25,11 +25,42 @@ function updatePfp(pfp) {
  * @param {string} names[].pretty - The prettified name
 */
 function prettifySubjectNames(names) {
+    // Sidebar subjects
     for (const sidebarSubject of document.querySelectorAll("#side-menu-mysubjects .nav-wrapper a")) {
         const unprettySubject = sidebarSubject.innerText;
         const prettySubject = names.find(sub => sub.name.toLowerCase() === unprettySubject.toLowerCase());
         if (prettySubject !== undefined) {
             sidebarSubject.innerText = `${prettySubject.pretty} (${unprettySubject.slice(unprettySubject.length - 1)})`;
+        }
+    }
+
+    if (location.pathname === "/") {
+        // Timetable subjects
+        for (const subject of document.querySelectorAll(`[data-timetable] td a`)) {
+            try {
+                const unprettySubject = subject.nextElementSibling.innerText;
+                const prettySubject = names.find(sub => `(${sub.name.toLowerCase()})` === unprettySubject.toLowerCase());
+                if (prettySubject !== undefined) {
+                    subject.innerText = prettySubject.pretty;
+                } else {
+                    console.log(`No pretty subject found for ${unprettySubject}`);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    
+        // Due work item subjects
+        for (const dueWorkItem of document.querySelectorAll(".due-work .meta a")) {
+            const unprettySubject = dueWorkItem.innerText;
+            // Removes brackets and anything outside of them, and matches that to the subject names
+            const prettySubject = names.find(sub =>
+                sub.name.toLowerCase() === unprettySubject.replace(/\)|(.*\()/g, "").toLowerCase()
+            );
+            console.log(dueWorkItem, unprettySubject, prettySubject);
+            if (prettySubject !== undefined) {
+                dueWorkItem.innerText = prettySubject.pretty;
+            }
         }
     }
 }
@@ -53,20 +84,30 @@ function fetchPrettySubjectNames() {
     })
 }
 
-if (location.pathname !== "/") {
+function getCachedSubjects() {
+    // Get cached subjects
     chrome.storage.local.get(["subjects"]).then((subjects) => {
         // Don't even worry about this line of code
         subjects = subjects.subjects;
-    
+
         console.log(subjects.subjects)
-    
+
         // If subject names have been saved, and that save has been updated in the last day
         if (subjects?.updated && Date.now() - subjects.updated < 86400000) {
+            // Don't bother fetching them again
             prettifySubjectNames(subjects.subjects);
         } else {
+            // Otherwise, fetch them
             fetchPrettySubjectNames();
         }
     }).catch(() => {
+        // If there are no cached, subjects, fetch them
         fetchPrettySubjectNames();
     });
+}
+
+if (location.pathname === "/") {
+    document.body.addEventListener("pageLoaded", getCachedSubjects);
+} else {
+    getCachedSubjects();
 }
