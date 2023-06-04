@@ -117,8 +117,8 @@ let acceptingFeedback = true;
 document.querySelector("#send-feedback").addEventListener("click", (ev) => {
     if (acceptingFeedback) {
         apiSend("POST", {
-            // origin: "schoolbox",
-            origin: "test",
+            origin: "schoolbox",
+            // origin: "test",
             content: document.querySelector("#feedback").value,
             anonymous: document.querySelector("#feedback-anon").checked
         }, "feedback", () => {
