@@ -136,3 +136,19 @@ document.querySelector("#send-feedback").addEventListener("click", (ev) => {
         acceptingFeedback = false;
     }
 })
+
+chrome.storage.sync.get(["feedback"]).then((result) => {
+    if (result.feedback) {
+        document.querySelector("#coolbox").classList.add("hide");
+    }
+});
+
+chrome.storage.onChanged.addListener((changes) => {
+    if (changes.feedback) {
+        if (changes.feedback.newValue === true) {
+            document.querySelector("#coolbox").classList.add("hide");
+        } else {
+            document.querySelector("#coolbox").classList.remove("hide");
+        }
+    }
+})

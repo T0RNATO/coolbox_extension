@@ -1,8 +1,12 @@
 let cookie;
 
 const rgbInput = document.querySelector("#rgb");
-const pfpSwitch = document.querySelector("#pfp");
-const darkSwitch = document.querySelector("#dark")
+
+const switches = {
+    pfp: {el: document.querySelector("#pfp"), default: false},
+    dark_mode: {el: document.querySelector("#dark"), default: false},
+    feedback: {el: document.querySelector("#feedback"), default: false}
+}
 
 function unlink() {
     fetch("https://api.coolbox.lol/discord", {method: "DELETE", headers: new Headers({
@@ -56,32 +60,26 @@ rgbInput.addEventListener("change", () => {
     })
 })
 
-pfpSwitch.addEventListener("click", () => {
-    chrome.storage.sync.set({
-        pfp: pfpSwitch.checked
+for (const [name, setting] of Object.entries(switches)) {
+    setting.el.addEventListener("click", () => {
+        chrome.storage.sync.set({
+            [name]: setting.el.checked
+        })
     })
-})
+}
 
-darkSwitch.addEventListener("click", () => {
-    chrome.storage.sync.set({
-        dark_mode: darkSwitch.checked
-    })
-})
-
-chrome.storage.sync.get(["rgb_speed", "pfp", "dark_mode"]).then((result) => {
+chrome.storage.sync.get(["rgb_speed", "pfp", "dark_mode", "feedback"]).then((result) => {
     if (result.rgb_speed) {
         rgbInput.value = result.rgb_speed;
     } else {
         rgbInput.value = 1;
     }
-    if (result.pfp) {
-        pfpSwitch.checked = result.pfp;
-    } else {
-        pfpSwitch.checked = false;
-    }
-    if (result.dark_mode) {
-        darkSwitch.checked = result.dark_mode;
-    } else {
-        darkSwitch.checked = false;
+    
+    for (const [name, setting] of Object.entries(switches)) {
+        if (name in result) {
+            setting.el.checked = result[name];
+        } else {
+            setting.el.checked = setting.default;
+        }
     }
 });
