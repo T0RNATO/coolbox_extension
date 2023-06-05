@@ -1,10 +1,9 @@
-:root.touch {
-    --body-background: #1e1e24;
-    --off-canvas-hover: var(--dark-accent);
-    --off-canvas-background: var(--generic-dark);
-    --form-border-color: var(--body-background);
-    --form-bg-hover-color: var(--dark-accent);
-
+:root {
+    --body-background: #1e1e24 !important;
+    --off-canvas-hover: var(--dark-accent) !important; 
+    --off-canvas-background: var(--generic-dark) !important;
+    --form-border-color: var(--body-background) !important;
+    --form-bg-hover-color: var(--dark-accent) !important;
     --generic-dark: #302f33;
     --dark-accent: #47464a;
     --dark-text: #e8e8e8;
