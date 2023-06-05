@@ -339,3 +339,7 @@ label {
     li.tile:nth-of-type(14) { --rotate: 250;}
     li.tile:nth-of-type(15) { --rotate: 288;}
 }
+
+.due-work .card.small-12 h3 {
+    width: 95%;
+}
