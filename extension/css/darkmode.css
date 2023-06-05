@@ -232,6 +232,6 @@ rect.highcharts-background {
     color: var(--dark-text);
 }
 
-label {
+label:not(.button) {
     color: var(--dark-text) !important;
 }

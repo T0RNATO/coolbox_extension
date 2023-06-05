@@ -33,7 +33,7 @@
     },
     {
       "js": [
-        "js/all_pages.js"
+        "js/subjectNames.js"
       ],
       "css": [
         "css/all_pages.css"
