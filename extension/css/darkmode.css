@@ -4,6 +4,10 @@
     --off-canvas-background: var(--generic-dark) !important;
     --form-border-color: var(--body-background) !important;
     --form-bg-hover-color: var(--dark-accent) !important;
+    --content-ui-hover-h: 100% !important;
+    --content-ui-hover-s: 3% !important;
+    --content-ui-hover-l: 35% !important;
+    
     --generic-dark: #302f33;
     --dark-accent: #47464a;
     --dark-text: #e8e8e8;
@@ -193,7 +197,7 @@ body blockquote::before {
   
 .dz-default.dz-message {
     background-color: var(--dark-accent);
-    color: var(--dark-text);
+    color: var(--link-colour);
 }
 
 a.button {

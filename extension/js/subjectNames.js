@@ -30,7 +30,11 @@ function prettifySubjectNames(names) {
         const unprettySubject = sidebarSubject.innerText;
         const prettySubject = names.find(sub => sub.name.toLowerCase() === unprettySubject.toLowerCase());
         if (prettySubject !== undefined) {
-            sidebarSubject.innerText = `${prettySubject.pretty} (${unprettySubject.slice(unprettySubject.length - 1)})`;
+            if (unprettySubject.startsWith("VET")) {
+                sidebarSubject.innerText = prettySubject.pretty;
+            } else {
+                sidebarSubject.innerText = `${prettySubject.pretty} (${unprettySubject.slice(unprettySubject.length - 1)})`;
+            }
         }
     }
 
