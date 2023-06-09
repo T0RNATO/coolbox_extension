@@ -4,7 +4,7 @@ chrome.storage.sync.get(["dark_mode", "theme_enabled"]).then((result) => {
     // Old version compat
     if (result.dark_mode) {
         chrome.storage.sync.remove("dark_mode")
-        chrome.storage.sync.set({"theme_enabled": true})
+        chrome.storage.sync.set({"theme_enabled": true, "theme": "dark"})
         themeEnabled = true;
         updateTheme();
     }
