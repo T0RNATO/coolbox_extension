@@ -178,6 +178,6 @@ span[data-assessment-status-text],
     color: var(--dark-text);
 }
 
-.content table td {
+.content table td, .content table th {
     color: var(--dark-text);
 }
