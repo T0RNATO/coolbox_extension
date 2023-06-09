@@ -177,3 +177,7 @@ span[data-assessment-status-text],
 #fc-dom-1 {
     color: var(--dark-text);
 }
+
+.content table td {
+    color: var(--dark-text);
+}
