@@ -132,8 +132,15 @@ body blockquote::before {
     color: var(--link-colour);
 }
 
-a.button {
+body .button, body button {
 	background-color: var(--dark-accent);
+    color: var(--link-colour)
+}
+
+body .button:hover, body button:hover {
+	filter: brightness(1.2);
+	background-color: var(--dark-accent);
+    color: var(--link-colour)
 }
 
 div#account-content {
@@ -174,10 +181,9 @@ span[data-assessment-status-text],
 .checklist.item,
 .option-list label,
 .content h2,
+.message,
+.content table td,
+.content table th,
 #fc-dom-1 {
-    color: var(--dark-text);
-}
-
-.content table td, .content table th {
     color: var(--dark-text);
 }

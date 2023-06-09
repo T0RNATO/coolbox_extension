@@ -4,9 +4,6 @@
     --off-canvas-background: var(--generic-dark) !important;
     --form-border-color: var(--body-background) !important;
     --form-bg-hover-color: var(--dark-accent) !important;
-    --content-ui-hover-h: 100% !important;
-    --content-ui-hover-s: 3% !important;
-    --content-ui-hover-l: 35% !important;
     
     --generic-dark: #302f33;
     --dark-accent: #47464a;

@@ -232,7 +232,7 @@ dl.tabs {
 }
 
 .notif-warning {
-    color: red;
+    color: rgb(207, 65, 65);
     display: none;
 }
 
