@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CoolBox",
   "version": "1.1.1",
-  "description": "An extension to make Donvale Schoolbox look good again.",
+  "description": "An extension to extend and reskin Schoolbox.",
   "icons": {
     "64": "icon.png"
   },
