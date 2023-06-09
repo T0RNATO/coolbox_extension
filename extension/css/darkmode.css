@@ -27,18 +27,6 @@ body textarea {
     color: var(--link-colour) !important;
 }
 
-body h1, :not(a) > h3 {
-    color: var(--dark-text) !important;
-}
-
-span[data-assessment-status-text] {
-    color: var(--dark-text);
-}
-
-#timeLeft {
-    color: var(--dark-text);
-}
-
 .timetable th, body .alert-box {
     background-color: var(--generic-dark) !important;
     color: var(--dark-text);
@@ -47,10 +35,6 @@ span[data-assessment-status-text] {
 th.timetable-period-active, .timetable-day-active {
     background-color: var(--dark-accent) !important;
     color: var(--dark-text) !important;
-}
-
-.content h2 {
-    color: var(--dark-text);
 }
 
 .timetable-subject a {
@@ -71,10 +55,6 @@ th.timetable-period-active, .timetable-day-active {
 
 .component-action section {
     background-color: var(--generic-dark) !important;
-}
-
-.list-item {
-    color: var(--dark-text);
 }
 
 #msgs {
@@ -101,10 +81,6 @@ li.actions-small-1 {
 ul.grid {
     background: var(--generic-dark);
 }
-
-.checklist.item {
-    color: var(--dark-text);
-}
   
 .filter-dropdown .filter-component > span.open {
     background: var(--generic-dark);
@@ -114,20 +90,12 @@ ul.grid {
     background: #3d3d40;
 }
   
-.option-list label {
-    color: var(--dark-text);
-}
-  
 #calendar th, #calendar td {
     background: var(--generic-dark);
 }
 
 dl.tabs {
     background: var(--dark-accent);
-}
-  
-dd a {
-    color: var(--dark-text) !important;
 }
   
 dd.active a {
@@ -144,10 +112,6 @@ dd.active a {
 
 li.tile {
     filter: hue-rotate(calc(var(--rotate) * 1deg)) brightness(1.35) contrast(1.3);
-}
-
-ul.off-canvas-list * {
-    color: var(--dark-text) !important;
 }
 
 #left-menu {
@@ -174,16 +138,8 @@ body blockquote::before {
 	background-color: var(--dark-accent) !important;
 }
 
-#fc-dom-1 {
-	color: var(--dark-text);
-}
-
 .fc-col-header-cell-cushion {
 	color: white !important;
-}
-
-.checkbox-label {
-    color: var(--dark-text);
 }
 
 #attachment-browser-panel-container, #attachment-browser-filesystems {
@@ -204,16 +160,8 @@ a.button {
 	background-color: var(--dark-accent);
 }
 
-article {
-    color: var(--dark-text);
-}
-
 div#account-content {
     background-color: var(--generic-dark);
-}
-
-.account-drop .separator {
-    color: var(--dark-text) !important;
 }
 
 rect.highcharts-background {
@@ -231,10 +179,25 @@ rect.highcharts-background {
     color: var(--dark-text) !important;
 }
 
-#cb-settings {
-    color: var(--dark-text);
+label:not(.button),
+.account-drop .separator,
+ul.off-canvas-list *,
+body h1,
+dd a,
+:not(a) > h3 {
+    color: var(--dark-text) !important;
 }
 
-label:not(.button) {
-    color: var(--dark-text) !important;
+.error-state div.row,
+.error-state div.row h2,
+article, #cb-settings,
+.checkbox-label,
+span[data-assessment-status-text],
+#timeLeft,
+.list-item,
+.checklist.item,
+.option-list label,
+.content h2,
+#fc-dom-1 {
+    color: var(--dark-text);
 }
