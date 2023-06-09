@@ -27,17 +27,37 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     }
                 })
                 break;
-            case "enableDarkMode":
-                chrome.scripting.insertCSS({
-                    files: ["css/darkmode.css"],
-                    target: {
-                        tabId: sender.tab.id
+            case "enableTheme":
+                chrome.storage.sync.get(["theme"]).then((result) => {
+                    if (result.theme) {
+                        chrome.scripting.removeCSS({
+                            files: [
+                                "css/themes/generic.css",
+                                "css/themes/dark.css",
+                                "css/themes/purple.css",
+                                "css/themes/dark_blue.css",
+                            ],
+                            target: {
+                                tabId: sender.tab.id
+                            }
+                        })
+                        chrome.scripting.insertCSS({
+                            files: ["css/themes/generic.css", `css/themes/${result.theme}.css`],
+                            target: {
+                                tabId: sender.tab.id
+                            }
+                        })
                     }
-                })
+                });
                 break;
-            case "disableDarkMode":
+            case "disableTheme":
                 chrome.scripting.removeCSS({
-                    files: ["css/darkmode.css"],
+                    files: [
+                        "css/themes/generic.css",
+                        "css/themes/dark.css",
+                        "css/themes/purple.css",
+                        "css/themes/dark_blue.css",
+                    ],
                     target: {
                         tabId: sender.tab.id
                     }

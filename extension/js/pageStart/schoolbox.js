@@ -89,9 +89,11 @@ if (!isWeekend) {
 }
 
 apiGet("stats/message", (message) => {
-    if (message.message !== null) {
-        const urgentMessage = document.querySelector(".message");
-        urgentMessage.innerText = message.message;
+    if (message.critical !== null) {
+        document.querySelector(".message-critical").innerText = message.critical;
+    }
+    if (message.info !== null) {
+        document.querySelector(".message").innerText = message.info;
     }
 })
 

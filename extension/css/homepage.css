@@ -43,18 +43,6 @@ li.tile:hover {
     transform: scale(1.05);
 }
 
-.message {
-    color: rgb(207, 65, 65);
-    display: inline-block;
-    padding-top: 7px;
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.message:empty {
-    display: none;
-}
-
 li.tile:nth-of-type(1) { --rotate: 0;}
 li.tile:nth-of-type(2) { --rotate: 24;}
 li.tile:nth-of-type(3) { --rotate: 48;}
@@ -250,6 +238,26 @@ dl.tabs {
 
 #coolbox {
     padding: 10px;
+}
+
+.message-critical {
+    color: rgb(207, 65, 65);
+    display: inline-block;
+    padding-top: 7px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.message {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 500;
+    padding-left: 10px;
+    padding-top: 7px;
+}
+
+.message:empty, .message-critical:empty {
+    display: none;
 }
 
 #cb-settings {

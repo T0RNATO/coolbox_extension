@@ -121,3 +121,17 @@ span.warning {
     font-size: 12px;
     color: red;
 }
+
+input.theme {
+    appearance: none;
+    width: 20px;
+    aspect-ratio: 1/1;
+    border: 1px solid rgba(0 0 0 / .3);
+    border-radius: 2px;
+}
+
+input.theme:checked {
+    outline: solid 2px black;
+    outline-offset: -2px;
+    border-radius: 30%;
+}

@@ -2,9 +2,11 @@ let cookie;
 
 const rgbInput = document.querySelector("#rgb");
 
+const themesButtons = document.querySelectorAll("input.theme");
+
 const switches = {
     pfp: {el: document.querySelector("#pfp"), default: false},
-    dark_mode: {el: document.querySelector("#dark"), default: false},
+    theme_enabled: {el: document.querySelector("#theme_enabled"), default: false},
     feedback: {el: document.querySelector("#feedback"), default: false}
 }
 
@@ -60,6 +62,14 @@ rgbInput.addEventListener("change", () => {
     })
 })
 
+themesButtons.forEach(el => {
+    el.addEventListener("click", (ev) => {
+        chrome.storage.sync.set({
+            theme: ev.target.value
+        })
+    })
+})
+
 for (const [name, setting] of Object.entries(switches)) {
     setting.el.addEventListener("click", () => {
         chrome.storage.sync.set({
@@ -68,11 +78,15 @@ for (const [name, setting] of Object.entries(switches)) {
     })
 }
 
-chrome.storage.sync.get(["rgb_speed", "pfp", "dark_mode", "feedback"]).then((result) => {
+chrome.storage.sync.get(["rgb_speed", "pfp", "theme_enabled", "feedback", "theme"]).then((result) => {
     if (result.rgb_speed) {
         rgbInput.value = result.rgb_speed;
     } else {
         rgbInput.value = 1;
+    }
+
+    if (result.theme) {
+        document.querySelector(`input.theme[value="${result.theme}"]`).checked = true;
     }
     
     for (const [name, setting] of Object.entries(switches)) {

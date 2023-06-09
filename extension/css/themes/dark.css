@@ -1,0 +1,19 @@
+:root {
+    --body-background: #1e1e24 !important;
+    --off-canvas-hover: var(--dark-accent) !important; 
+    --off-canvas-background: var(--generic-dark) !important;
+    --form-border-color: var(--body-background) !important;
+    --form-bg-hover-color: var(--dark-accent) !important;
+    --content-ui-hover-h: 100% !important;
+    --content-ui-hover-s: 3% !important;
+    --content-ui-hover-l: 35% !important;
+    
+    --generic-dark: #302f33;
+    --dark-accent: #47464a;
+    --dark-text: #e8e8e8;
+    --link-colour: #59a9ff;
+}
+
+.timetable-subject {
+    filter: brightness(0.8);
+}

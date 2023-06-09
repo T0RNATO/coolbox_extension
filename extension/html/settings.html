@@ -26,11 +26,18 @@
 
         <div class="flex">
             <span class="settings-label">
-                Dark Mode:
+                Enable Theme:
             </span>
-            <input type="checkbox" id="dark">
+            <input type="checkbox" id="theme_enabled">
         </div>
-        <span class="warning">(Note: Dark Mode is in beta - please report bugs on the discord server below.)</span>
+        <div class="flex">
+            <span class="settings-label">
+                Theme:
+            </span>
+            <input type="radio" name="theme" value="dark" class="theme" style="background-color: #302f33;" title="Dark">
+            <input type="radio" name="theme" value="purple" class="theme" style="background-color: #5438b3;" title="Purple">
+            <input type="radio" name="theme" value="dark_blue" class="theme" style="background-color: #0c1663;" title="Dark Blue">
+        </div>
 
         <div class="flex">
             <span class="settings-label">
